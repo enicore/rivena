@@ -1,0 +1,24 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use "sass:map";
+@use "../scss/variables" as c;
+@use "../scss/functions" as f;
+
+@mixin variables {
+    @each $color-name, $color-value in c.$colors {
+        @each $shade-name, $shade-value in c.$shades {
+            --#{$color-name}-#{$shade-name}: #{f.color($color-name, $shade-name)};
+        }
+    }
+}
+
+@mixin classes {
+    @each $color-name, $color-value in c.$colors {
+        @each $shade-name, $shade-value in c.$shades {
+            .bg-#{$color-name}-#{$shade-name} { background-color: var(--#{$color-name}-#{$shade-name}) };
+            .text-#{$color-name}-#{$shade-name} { color: var(--#{$color-name}-#{$shade-name}) };
+        }
+    }
+}

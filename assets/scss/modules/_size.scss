@@ -1,0 +1,69 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+@use "../scss/variables" as v;
+
+// the screen sizes and where they start
+$sizes: (
+    xs: 0,
+    sm: map.get(v.$breakpoints, sm),
+    md: map.get(v.$breakpoints, md),
+    lg: map.get(v.$breakpoints, lg),
+    xl: map.get(v.$breakpoints, xl),
+);
+
+// styles for a screen size (xs, sm, md, lg, xl), or a size and the smaller (sm-down) or larger ones (sm-up):
+// .sidebar { @include size(xs) { display: none; } }
+@mixin size($name) {
+    $direction: null;
+
+    @if string.index($name, "-up") {
+        $direction: up;
+        $name: string.slice($name, 1, -4);
+    } @else if string.index($name, "-down") {
+        $direction: down;
+        $name: string.slice($name, 1, -6);
+    }
+
+    $names: map.keys($sizes);
+    $i: list.index($names, $name);
+    $min: map.get($sizes, $name);
+    $max: null;
+
+    @if $i < list.length($names) {
+        $max: map.get($sizes, list.nth($names, $i + 1)) - .02px;
+    }
+
+    @if $direction == up or $max == null {
+        $max: null;
+    }
+
+    @if $direction == down or $min == 0 {
+        $min: null;
+    }
+
+    @if $min and $max {
+        @media (min-width: $min) and (max-width: $max) { @content; }
+    } @else if $min {
+        @media (min-width: $min) { @content; }
+    } @else if $max {
+        @media (max-width: $max) { @content; }
+    } @else {
+        @content;
+    }
+}
+
+@mixin classes {
+    @each $name in map.keys($sizes) {
+        .hide-#{$name} { @include size($name) { display: none !important; } }
+    }
+
+    @each $name in sm, md, lg {
+        .hide-#{$name}-down { @include size(#{$name}-down) { display: none !important; } }
+        .hide-#{$name}-up { @include size(#{$name}-up) { display: none !important; } }
+    }
+}

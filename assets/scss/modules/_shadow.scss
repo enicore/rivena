@@ -1,0 +1,54 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use "../scss/functions" as f;
+@use '../scss/variables' as v;
+
+@mixin variables {
+    --shadow-xs: 0 0 2px rgb(255 255 255 / 0.08);
+    --shadow-sm: 0 0 4px rgb(255 255 255 / 0.12);
+    --shadow-md: 0 0 6px rgb(255 255 255 / 0.15);
+    --shadow-lg: 0 0 15px rgb(255 255 255 / 0.2);
+    --shadow-xl: 0 0 25px rgb(255 255 255 / 0.25);
+    --shadow: var(--shadow-md);
+
+    --drop-shadow-xs: 0 1px 1px rgb(255 255 255 / 0.14);
+    --drop-shadow-sm: 0 1px 2px rgb(255 255 255 / 0.14);
+    --drop-shadow-md: 0 3px 3px rgb(255 255 255 / 0.16);
+    --drop-shadow-lg: 0 4px 4px rgb(255 255 255 / 0.18);
+    --drop-shadow-xl: 0 8px 6px rgb(255 255 255 / 0.20);
+    --drop-shadow: var(--drop-shadow-md);
+}
+
+@mixin light-variables {
+    --shadow-xs: 0 0 2px rgb(0 0 0 / 0.08);
+    --shadow-sm: 0 0 4px rgb(0 0 0 / 0.12);
+    --shadow-md: 0 0 6px rgb(0 0 0 / 0.15);
+    --shadow-lg: 0 0 15px rgb(0 0 0 / 0.12);
+    --shadow-xl: 0 0 25px rgb(0 0 0 / 0.25);
+
+    --drop-shadow-xs: 0 1px 1px rgb(0 0 0 / 0.05);
+    --drop-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.15);
+    --drop-shadow-md: 0 3px 3px rgb(0 0 0 / 0.12);
+    --drop-shadow-lg: 0 4px 4px rgb(0 0 0 / 0.16);
+    --drop-shadow-xl: 0 8px 6px rgb(0 0 0 / 0.20);
+}
+
+@mixin classes($bp: '') {
+    @each $size in v.$xs-xl {
+        $default: if(sass($size == "md"): ".#{$bp}shadow,"; else: "");
+        #{$default}.#{$bp}shadow-#{$size} { box-shadow: var(--shadow-#{$size}); }
+
+        $default: if(sass($size == "md"): ".#{$bp}hover-shadow:hover,"; else: "");
+        #{$default}.#{$bp}hover-shadow-#{$size}:hover { box-shadow: var(--shadow-#{$size}); }
+
+        $default: if(sass($size == "md"): ".#{$bp}drop-shadow,"; else: "");
+        #{$default}.#{$bp}shadow-#{$size} { filter: drop-shadow(var(--drop-shadow-#{$size})); }
+
+        $default: if(sass($size == "md"): ".#{$bp}hover-drop-shadow:hover,"; else: "");
+        #{$default}.#{$bp}hover-drop-shadow-#{$size}:hover { box-shadow: var(--drop-shadow-#{$size}); }
+    }
+}
+
+

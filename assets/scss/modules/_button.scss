@@ -1,0 +1,245 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use "../scss/variables" as v;
+@use "../scss/functions" as f;
+@use "transition";
+
+@mixin variables {
+    --button-default: #{f.color(v.$default-color, 600)};
+    --button-primary: #{f.color(v.$primary-color, 600)};
+    --button-success: #{f.color(v.$success-color, 600)};
+    --button-warning: #{f.color(v.$warning-color, 600)};
+    --button-danger: #{f.color(v.$danger-color, 600)};
+    --button-info: #{f.color(v.$info-color, 600)};
+
+    --button-text-color: #{f.color('gray', 50)};
+
+    --button-lr-p-sm: .8rem;
+    --button-lr-p-md: 1.6rem;
+    --button-lr-p-lg: 1.6rem;
+    --button-lr-p: var(--button-lr-p-md);
+
+    // x-small and x-large are buttons only (no inputs in these sizes), so they have their own sizes
+    --button-font-xs: .8rem;
+    --button-p-xs: .1rem .5rem;
+    --button-font-xl: 1.3rem;
+    --button-p-xl: .8rem 2rem;
+}
+
+@mixin light-variables {
+    --button-default: #{f.color(v.$default-color, 500)};
+    --button-primary: #{f.color(v.$primary-color, 500)};
+    --button-success: #{f.color(v.$success-color, 500)};
+    --button-warning: #{f.color(v.$warning-color, 500)};
+    --button-danger: #{f.color(v.$danger-color, 500)};
+    --button-info: #{f.color(v.$info-color, 500)};
+}
+
+@mixin classes {
+    button,
+    .button,
+    input[type='button'],
+    input[type='submit'],
+    input[type='reset'] {
+        @include button;
+
+        @each $intent, $class in v.$intent-classes {
+            #{$class} {
+                @include button-intent($intent);
+            }
+        }
+
+        &.x-large { @include button-x-large; }
+        &.large { @include button-large; }
+        &.small { @include button-small; }
+        &.x-small { @include button-x-small; }
+        &.minimal { @include button-minimal; }
+        &.progress { @include button-progress; }
+    }
+}
+
+@mixin button {
+    & {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--p-xs);
+        cursor: pointer;
+        justify-content: center;
+        text-align: center;
+        // the inputs' size (_input.scss); min-height, so a long text can wrap
+        font-size: var(--input-font);
+        line-height: var(--input-line-height);
+        min-height: var(--input-h);
+        padding: var(--input-p);
+        padding-left: var(--button-lr-p);
+        padding-right: var(--button-lr-p);
+        outline: 0;
+        border-width: var(--input-b-width);
+        border-style: solid;
+        border-radius: var(--input-r);
+        color: var(--button-text-color);
+        text-decoration: none;
+        transition-property: color, background-color, border-color, filter;
+        transition-timing-function: ease-in-out;
+        transition-duration: .1s;
+        @include button-default;
+
+        &,
+        &:before,
+        &:after {
+            //line-height: 1;
+        }
+
+        &:disabled,
+        &.disabled {
+            cursor: not-allowed;
+            filter: opacity(60%) !important;
+
+            &:hover {
+                filter: none;
+            }
+        }
+
+        &:hover {
+            filter: brightness(1.2);
+        }
+
+        // keyboard users see which button has the focus
+        &:focus-visible {
+            outline: 2px solid var(--b-primary);
+            outline-offset: 2px;
+        }
+
+        // icons
+        &[class^="icon-"], &[class*=" icon-"] {
+            &:before {
+                font-size: 1em;
+                width: 1.1em;
+            }
+        }
+    }
+}
+
+@mixin button-large() {
+    // & avoids nested rules errors https://sass-lang.com/d/mixed-decls
+    & {
+        font-size: var(--input-font-lg);
+        font-weight: var(--font-semibold);
+        min-height: var(--input-h-lg);
+        padding: var(--input-p-lg);
+        padding-left: var(--button-lr-p-lg);
+        padding-right: var(--button-lr-p-lg);
+    }
+}
+
+@mixin button-x-large() {
+    & {
+        font-size: var(--button-font-xl);
+        font-weight: var(--font-semibold);
+        min-height: 0;
+        padding: var(--button-p-xl);
+    }
+}
+
+@mixin button-x-small() {
+    & {
+        font-size: var(--button-font-xs);
+        min-height: 0;
+        padding: var(--button-p-xs);
+    }
+}
+
+@mixin button-small() {
+    & {
+        font-size: var(--input-font-sm);
+        min-height: var(--input-h-sm);
+        padding: var(--input-p-sm);
+        padding-left: var(--button-lr-p-sm);
+        padding-right: var(--button-lr-p-sm);
+    }
+}
+
+@mixin button-minimal() {
+    & {
+        background-color: transparent !important;
+        border: none !important;
+        color: var(--text-color);
+    }
+}
+
+@mixin button-progress() {
+    & {
+        position: relative;
+        color: transparent !important;
+        cursor: not-allowed;
+        pointer-events: none;
+
+        &:after {
+            position: absolute;
+            display: block;
+            padding: 0;
+            content: "";
+            width: 0.7em;
+            height: 0.7em;
+            border-radius: 50%;
+            border-style: solid;
+            border-width: 1px;
+            border-bottom-color: transparent;
+            transform: none;
+            animation: var(--a-spin);
+            color: var(--button-text-color);
+        }
+
+        &:hover {
+            filter: none;
+        }
+    }
+}
+
+@mixin button-outlined($intent: default) {
+    & {
+        background-color: var(--bg);
+        border-color: var(--text-#{$intent});
+        color: var(--text-#{$intent});
+
+        &:hover {
+            filter: none;
+            background-color: var(--button-#{$intent});
+            border-color: var(--button-#{$intent});
+            color: var(--button-text-color);
+        }
+    }
+}
+
+@mixin button-intent($intent: default) {
+    & {
+        background-color: var(--button-#{$intent});
+        border-color: rgb(255 255 255 / .4);
+
+        &.outlined {
+            @include button-outlined($intent);
+        }
+
+        html.light & {
+            border-color: var(--button-#{$intent});
+        }
+    }
+}
+
+@mixin button-default { @include button-intent("default"); }
+@mixin button-primary { @include button-intent("primary"); }
+@mixin button-success { @include button-intent("success"); }
+@mixin button-warning { @include button-intent("warning"); }
+@mixin button-danger { @include button-intent("danger"); }
+@mixin button-info { @include button-intent("info"); }
+
+@mixin button-outlined-primary { @include button-outlined("primary"); }
+@mixin button-outlined-success { @include button-outlined("success"); }
+@mixin button-outlined-warning { @include button-outlined("warning"); }
+@mixin button-outlined-danger { @include button-outlined("danger"); }
+@mixin button-outlined-info { @include button-outlined("info"); }
+
+

@@ -1,0 +1,8 @@
+
+@use "modules/_color.scss";
+
+:root { 
+    @include color.variables;
+}
+
+@include color.classes; 

@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+// Rivena's commands, see Enicore\Rivena\Classes\Console. The project is the one whose vendor/bin/rivena runs (Composer
+// gives its autoloader), so any directory works; without Composer's proxy, the current directory.
+
+// the real path: Composer's is vendor/bin/../autoload.php, two dirname()s from vendor/bin
+$autoload = realpath($_composer_autoload_path ?? getcwd() . '/vendor/autoload.php');
+require $autoload;
+
+exit(new Enicore\Rivena\Classes\Console(dirname($autoload, 2))->run(array_slice($argv, 1)));

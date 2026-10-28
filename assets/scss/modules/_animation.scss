@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@mixin variables {
+    --a-spin: spin 1s linear infinite;
+    --a-ping: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+    --a-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --a-bounce: bounce 1s infinite;
+}
+
+@mixin classes($bp: '') {
+    @if ($bp == '') {
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+        @keyframes pulse { 50% { opacity: 0.5; } }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-25%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: none;
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+    }
+
+    .#{$bp}a-none { animation: none; }
+    .#{$bp}a-spin { animation: var(--a-spin); }
+    .#{$bp}a-ping { animation: var(--a-ping); }
+    .#{$bp}a-pulse { animation: var(--a-pulse); }
+    .#{$bp}a-bounce { animation: var(--a-bounce); }
+}

@@ -1,0 +1,10 @@
+# left out of the package the apps install (Composer's copy of a path repository, the downloads from packagist)
+/vendor export-ignore
+/tests export-ignore
+/dev export-ignore
+/.idea export-ignore
+/.phpunit.cache export-ignore
+/coverage-report export-ignore
+/phpunit.xml export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore

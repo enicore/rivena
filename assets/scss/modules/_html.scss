@@ -1,0 +1,210 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use "../scss/variables" as v;
+@use "../scss/functions" as f;
+
+@mixin variables {
+    --bg-default: #{f.color(v.$default-color, 850)};
+    --bg-primary: #{f.color(v.$primary-color, 850)};
+    --bg-success: #{f.color(v.$success-color, 850)};
+    --bg-warning: #{f.color(v.$warning-color, 850)};
+    --bg-danger:  #{f.color(v.$danger-color,  850)};
+    --bg-info:    #{f.color(v.$info-color,    850)};
+    --bg: var(--bg-default);
+    --line-height: 1.5;
+}
+
+@mixin light-variables {
+    --bg-default: #fff;
+    --bg-primary: #{f.color(v.$primary-color, 50)};
+    --bg-success: #{f.color(v.$success-color, 50)};
+    --bg-warning: #{f.color(v.$warning-color, 50)};
+    --bg-danger:  #{f.color(v.$danger-color,  50)};
+    --bg-info:    #{f.color(v.$info-color,    50)};
+}
+
+@mixin classes {
+    .bg, .bg-default { background-color: var(--bg); }
+    .bg-primary { background-color: var(--bg-primary); }
+    .bg-success { background-color: var(--bg-success); }
+    .bg-warning { background-color: var(--bg-warning); }
+    .bg-danger { background-color: var(--bg-danger); }
+    .bg-info { background-color: var(--bg-info); }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        -webkit-text-size-adjust: 100%;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 100vh;
+        font-family: var(--font-sans-serif), sans-serif;
+        font-size: var(--font-size);
+        background: var(--bg);
+        color: var(--text-default);
+        line-height: var(--line-height);
+        word-wrap: break-word;
+        margin: 0;
+        padding: 0;
+    }
+
+    // these elements don't inherit these properties from body
+    button,
+    input,
+    select,
+    textarea,
+    optgroup,
+    option,
+    fieldset,
+    legend {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        font-weight: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+    }
+
+    h1, .h1 {
+        font-size: clamp(2rem, 3vw + 1rem, 3.4rem);
+        font-weight: var(--font-bold);
+        margin: 0 0 var(--m) 0;
+        padding: 0;
+        text-align: center;
+        line-height: 1.1;
+    }
+
+    h2, .h2 {
+        font-size: clamp(1.8rem, 2vw + 1rem, 2.2rem);
+        font-weight: var(--font-bold);
+        margin: 0 0 var(--m) 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    h3, .h3 {
+        font-size: clamp(1.6rem, 2vw + 1rem, 1.8rem);
+        font-weight: var(--font-bold);
+        margin: 0 0 var(--m) 0;
+        padding: 0;
+    }
+
+    h4, .h4 {
+        font-size: 1.4rem;
+        font-weight: var(--font-semibold);
+        margin: 0 0 var(--m) 0;
+        padding: 0;
+    }
+
+    h5, .h5 {
+        font-size: 1.2rem;
+        font-weight: var(--font-semibold);
+        margin: 0 0 var(--m) 0;
+        padding: 0;
+    }
+
+    h6, .h6 {
+        font-size: 1rem;
+        font-weight: var(--font-semibold);
+        margin: 0 0 var(--m) 0;
+        line-height: 1.1;
+        padding: 0;
+    }
+
+    p {
+        padding: 0;
+        margin: var(--m) 0;
+    }
+
+    //code,
+    //pre {
+    //    overflow-wrap: break-word;
+    //    white-space: pre-wrap;
+    //    padding: var(--p);
+    //    border: 1px solid var(--rgba-20);
+    //    border-radius: var(--r);
+    //    background-color: var(--rgba--20);
+    //}
+
+    a {
+        text-decoration: none;
+        color: var(--text-link);
+
+        &:not(.button):hover,
+        &:not(.button):focus,
+        &:not(.button):active {
+            text-decoration: underline;
+        }
+    }
+
+    b,
+    strong {
+        font-weight: var(--font-bold);
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-style: none;
+    }
+
+    blockquote {
+        padding-left: 1em;
+
+        @each $intent, $class in v.$intent-classes {
+            #{$class} {
+                border-left: var(--b-lg);
+                border-color: var(--b-#{$intent});
+            }
+        }
+    }
+
+    ul {
+        list-style-position: inside;
+        margin: 0;
+        padding: 0;
+
+        &.no-bullets {
+            list-style: none;
+        }
+
+        li {
+            padding: var(--p-xs) 0;
+        }
+    }
+
+    .container {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0 var(--p-md);
+        max-width: 1400px;
+    }
+
+    .show-if-sidebar-collapsed {
+        display: none;
+        html.sidebar-collapsed & { display: block; }
+    }
+
+    .show-if-sidebar-expanded {
+        display: none;
+        html:not(.sidebar-collapsed) & { display: block; }
+    }
+
+    .show-if-dark-theme {
+        display: none;
+        html.dark & { display: block; }
+    }
+
+    .show-if-light-theme {
+        display: none;
+        html.light & { display: block; }
+    }
+}

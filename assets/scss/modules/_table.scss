@@ -1,0 +1,85 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@mixin classes {
+    .border-collapse { border-collapse: collapse; }
+    .border-separate { border-collapse: separate; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: var(--m-md);
+
+        th,
+        td {
+            padding: var(--p-sm);
+            border-bottom: var(--b);
+        }
+
+        th {
+            font-weight: var(--font-semibold);
+            text-align: start;
+
+            // the button of a header that sorts the table (<th :aria-sort><button class="sortable">): it looks like
+            // the header's text, so all of the buttons' style is undone (more specific than `html.light button`)
+            button.sortable {
+                all: unset;
+                display: block;
+                box-sizing: border-box;
+                width: 100%;
+                cursor: pointer;
+                user-select: none;
+                text-align: start;
+
+                &:focus-visible {
+                    outline: 2px solid var(--b-primary);
+                    outline-offset: 2px;
+                }
+            }
+        }
+
+        // the rows are being replaced (e.g. a server-side table loading a page)
+        &.loading tbody {
+            opacity: .5;
+        }
+
+        &:not(.last-row-border) tr:last-child td {
+            border-bottom: none;
+        }
+
+        &.striped {
+            td {
+                border: none;
+            }
+        }
+
+        &.striped tr:nth-child(odd) td,
+        &.interactive tbody tr:hover {
+            background-color: var(--rgba-5);
+        }
+
+        &.bordered {
+            th,
+            td,
+            tr:last-child td {
+                border: var(--b-xs);
+            }
+        }
+
+        &.borderless {
+            th,
+            td {
+                border: none;
+            }
+        }
+
+        &.condensed {
+            th,
+            td {
+                padding: var(--p-xs) var(--p-sm);
+            }
+        }
+    }
+}

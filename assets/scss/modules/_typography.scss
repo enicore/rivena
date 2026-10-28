@@ -1,0 +1,194 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use '../scss/functions' as f;
+@use "../scss/variables" as v;
+
+// the URL of Ubuntu Sans's files (dist/fonts, which `rivena publish` copies to public/fonts); false leaves the font
+// out and uses the system's font
+$font-path: "/fonts" !default;
+
+$latin-range: U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2009, U+2013-2015, U+2018-201A,
+    U+201C-201E, U+2020-2022, U+2026, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2074, U+20AC, U+2212, U+2215;
+$latin-extended-range: U+0100-024F, U+1E2C-1E2D, U+1E6C-1E6D, U+1E80-1E85, U+1E9E, U+1ECA-1ECB, U+1EF2-1EF3, U+20AE,
+    U+20B4, U+20B8-20B9, U+20BD;
+
+// variable fonts (all the weights and widths in one file); the browser loads a subset only when the page has its
+// characters
+@mixin font-face {
+    @if $font-path {
+        @each $style, $suffix in (normal: "", italic: "-italic") {
+            @each $subset, $range in (latin: $latin-range, latin-extended: $latin-extended-range) {
+                @font-face {
+                    font-family: "Ubuntu Sans";
+                    font-style: $style;
+                    font-weight: 100 800;
+                    font-stretch: 75% 100%;
+                    font-display: swap;
+                    src: url("#{$font-path}/ubuntu-sans#{$suffix}-#{$subset}.woff2") format("woff2");
+                    unicode-range: $range;
+                }
+            }
+        }
+    }
+}
+
+@mixin variables {
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    @if $font-path {
+        --font-sans-serif: "Ubuntu Sans", ui-sans-serif, system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+    } @else {
+        --font-sans-serif: ui-sans-serif, system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+    }
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+    --font-size: 15px;
+
+    --font-xxs: .7rem;
+    --font-xs: .8rem;
+    --font-sm: .9rem;
+    --font-md: 1rem;
+    --font-lg: 1.1rem;
+    --font-xl: 1.2rem;
+    --font-xxl: 1.3rem;
+
+    --font-thin: 100;
+    --font-extrathin: 200;
+    --font-light: 300;
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-extrabold: 800;
+
+    --text-default: #{f.color(v.$default-color, 200)};
+    --text-primary: #{f.color(v.$primary-color, 350)};
+    --text-success: #{f.color(v.$success-color, 350)};
+    --text-warning: #{f.color(v.$warning-color, 350)};
+    --text-danger: #{f.color(v.$danger-color,  350)};
+    --text-info: #{f.color(v.$info-color, 350)};
+    --text-link: #{f.color(v.$primary-color, 350)};
+    --text-color: var(--text-default);
+}
+
+@mixin light-variables {
+    --text-default: #{f.color(v.$default-color, 700)};
+    --text-primary: #{f.color(v.$primary-color, 500)};
+    --text-success: #{f.color(v.$success-color, 500)};
+    --text-warning: #{f.color(v.$warning-color, 500)};
+    --text-danger: #{f.color(v.$danger-color,  500)};
+    --text-info: #{f.color(v.$info-color,  500)};
+    --text-link: #{f.color(v.$primary-color, 500)};
+}
+
+@mixin classes($bp: '') {
+    .#{$bp}font-serif { font-family: var(--font-serif), serif; }
+    .#{$bp}font-sans-serif { font-family: var(--font-sans-serif), sans-serif; }
+    .#{$bp}font-mono { font-family: var(--font-mono), monospace; }
+
+    .#{$bp}text-color, .text-default { color: var(--text-default); }
+    .#{$bp}text-primary { color: var(--text-primary); }
+    .#{$bp}text-success { color: var(--text-success); }
+    .#{$bp}text-warning { color: var(--text-warning); }
+    .#{$bp}text-danger { color: var(--text-danger); }
+    .#{$bp}text-info { color: var(--text-info); }
+    .#{$bp}text-link { color: var(--text-link); }
+
+    .#{$bp}font-xxs { font-size: var(--font-xxs); }
+    .#{$bp}font-xs { font-size: var(--font-xs); }
+    .#{$bp}font-sm { font-size: var(--font-sm); }
+    .#{$bp}font-md { font-size: var(--font-md); }
+    .#{$bp}font-lg { font-size: var(--font-lg); }
+    .#{$bp}font-xl { font-size: var(--font-xl); }
+    .#{$bp}font-xxl { font-size: var(--font-xxl); }
+
+    .#{$bp}font-1 { font-size: 1rem; }
+    .#{$bp}font-1-5 { font-size: 1.5rem; }
+    .#{$bp}font-2 { font-size: 2rem; }
+    .#{$bp}font-2-5 { font-size: 2.5rem; }
+    .#{$bp}font-3 { font-size: 3rem; }
+    .#{$bp}font-3-5 { font-size: 3.5rem; }
+    .#{$bp}font-4 { font-size: 4rem; }
+    .#{$bp}font-4-5 { font-size: 4.5rem; }
+    .#{$bp}font-5 { font-size: 5rem; }
+
+    .#{$bp}font-thin { font-weight: var(--font-thin); }
+    .#{$bp}font-extrathin { font-weight: var(--font-extrathin); }
+    .#{$bp}font-light { font-weight: var(--font-light); }
+    .#{$bp}font-normal { font-weight: var(--font-regular); }
+    .#{$bp}font-medium { font-weight: var(--font-medium); }
+    .#{$bp}font-semibold { font-weight: var(--font-semibold); }
+    .#{$bp}font-bold { font-weight: var(--font-bold); }
+    .#{$bp}font-extrabold { font-weight: var(--font-extrabold); }
+
+    .#{$bp}italic { font-style: italic; }
+    .#{$bp}non-italic { font-style: normal; }
+
+    .#{$bp}center, .#{$bp}text-center { text-align: center; }
+    .#{$bp}left, .#{$bp}text-left { text-align: left; }
+    .#{$bp}right, .#{$bp}text-right { text-align: right; }
+    .#{$bp}justify .#{$bp}text-justify { text-align: justify; }
+
+    .#{$bp}uppercase { text-transform: uppercase; }
+    .#{$bp}lowercase { text-transform: lowercase; }
+    .#{$bp}capitalize { text-transform: capitalize; }
+    .#{$bp}normal-case { text-transform: none; }
+
+    .#{$bp}text-wrap { text-wrap: wrap; }
+    .#{$bp}text-nowrap { text-wrap: nowrap; }
+    .#{$bp}text-balance { text-wrap: balance; }
+    .#{$bp}text-pretty { text-wrap: pretty; }
+
+    .#{$bp}letter-spacing-xs { letter-spacing: -.05em; }
+    .#{$bp}letter-spacing-sm { letter-spacing: -.025em; }
+    .#{$bp}letter-spacing, .letter-spacing-md { letter-spacing: 0; }
+    .#{$bp}letter-spacing-lg { letter-spacing: .025em; }
+    .#{$bp}letter-spacing-xl { letter-spacing: .05em; }
+
+    .#{$bp}underline { text-decoration-line: underline; }
+    .#{$bp}no-underline { text-decoration-line: none; }
+    .#{$bp}line-through { text-decoration-line: line-through; }
+    .#{$bp}hover-underline:hover { text-decoration-line: underline !important; }
+    .#{$bp}hover-no-underline:hover { text-decoration-line: none !important; }
+
+    .#{$bp}decoration-solid { text-decoration-style: solid; }
+    .#{$bp}decoration-double { text-decoration-style: double; }
+    .#{$bp}decoration-dotted { text-decoration-style: dotted; }
+    .#{$bp}decoration-dashed { text-decoration-style: dashed; }
+    .#{$bp}decoration-wavy { text-decoration-style: wavy; }
+
+    .#{$bp}truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .#{$bp}text-ellipsis { text-overflow: ellipsis; }
+    .#{$bp}text-clip { text-overflow: clip; }
+
+    .#{$bp}align-baseline { vertical-align: baseline; }
+    .#{$bp}align-top { vertical-align: top; }
+    .#{$bp}align-middle { vertical-align: middle; }
+    .#{$bp}align-bottom { vertical-align: bottom; }
+    .#{$bp}align-text-top { vertical-align: text-top; }
+    .#{$bp}align-text-bottom { vertical-align: text-bottom; }
+    .#{$bp}align-sub { vertical-align: sub; }
+    .#{$bp}align-super { vertical-align: super; }
+
+    .#{$bp}whitespace-normal { white-space: normal; }
+    .#{$bp}whitespace-nowrap { white-space: nowrap; }
+    .#{$bp}whitespace-pre { white-space: pre; }
+    .#{$bp}whitespace-pre-line { white-space: pre-line; }
+    .#{$bp}whitespace-pre-wrap { white-space: pre-wrap; }
+    .#{$bp}whitespace-break-spaces { white-space: break-spaces; }
+
+    .#{$bp}break-normal { overflow-wrap: normal; word-break: normal; }
+    .#{$bp}break-words { overflow-wrap: anywhere; } // also narrows table cells and flex items, unlike break-word
+    .#{$bp}break-all { word-break: break-all; }
+    .#{$bp}break-keep { word-break: keep-all; }
+
+    .#{$bp}hyphens-none { hyphens: none; }
+    .#{$bp}hyphens-manual { hyphens: manual; }
+    .#{$bp}hyphens-auto { hyphens: auto; }
+
+    .#{$bp}reversed-text { unicode-bidi: bidi-override; direction: rtl; }
+}
+
+

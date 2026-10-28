@@ -1,0 +1,156 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use "../scss/variables" as v;
+
+@mixin classes {
+    .input-group {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 0.6rem 0;
+        box-sizing: border-box;
+        min-height: 2.3rem;
+
+        &.column {
+            label {
+                flex-basis: 100%;
+            }
+
+            // above the field: no row height
+            > label:first-child,
+            > .label:first-child {
+                min-height: 0;
+            }
+        }
+
+        > .label:first-child,
+        > label:first-child {
+            display: inline-flex; // flex so any icons align vertically with text
+            align-items: center;
+            box-sizing: border-box;
+            margin: .2rem 1.5rem .2rem 0;
+            flex-basis: 25%;
+            // next to the field's first line, also when the field is taller (a textarea, a message under the field)
+            align-self: flex-start;
+            min-height: 2.3rem;
+
+            &.right,
+            .label-right > & {
+                text-align: right;
+            }
+
+            .size-lg & { flex-basis: 30%; }
+            .size-md & { flex-basis: 35%; }
+            .size-sm & { flex-basis: 40%; }
+        }
+
+        > *:not(label):not(.label):not(button):not(.hover-icon):not(.error-message) {
+            box-sizing: border-box;
+            margin: .2rem 0;
+            flex-grow: 1;
+            // the rest of the line next to the label, from 0: a long text inside (a message) wraps there instead of
+            // moving the field under the label
+            flex-basis: 0;
+            min-width: 0;
+
+            input:not([type='checkbox']):not([type='radio']),
+            select, textarea {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        button {
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+
+        .error-message {
+            display: none;
+            font-size: .9rem;
+            margin-top: .2rem;
+            margin-left: .1rem;
+            color: var(--text-danger);
+        }
+
+        // a message after the field: on its own line, under the field (after the label's width)
+        > .error-message {
+            flex-basis: 100%;
+            margin-top: 0;
+        }
+
+        > label:first-child ~ .error-message,
+        > .label:first-child ~ .error-message {
+            margin-left: calc(25% + 1.5rem);
+
+            .size-lg & { margin-left: calc(30% + 1.5rem); }
+            .size-md & { margin-left: calc(35% + 1.5rem); }
+            .size-sm & { margin-left: calc(40% + 1.5rem); }
+        }
+
+        &.column > .error-message {
+            margin-left: .1rem !important;
+        }
+
+        &.error {
+            .error-message {
+                display: block;
+            }
+
+            label {
+                color: var(--text-danger);
+            }
+
+            input,
+            textarea {
+                border-color: var(--b-danger);
+
+
+                &:focus {
+                    border-color: var(--b-danger);
+                    box-shadow: 0 0 8px 0 var(--b-danger);
+                }
+            }
+        }
+    }
+
+    @media (max-width: v.$breakpoint-sm) {
+        .input-group {
+            > .label,
+            > label:not(.switch) {
+                flex-basis: 100% !important;
+                text-align: left !important;
+                margin-bottom: .4rem;
+                min-height: 0;
+            }
+
+            > .error-message {
+                margin-left: .1rem !important;
+            }
+        }
+    }
+
+    @for $i from 1 through 20 {
+        $i: $i * 5;
+
+        // input-group label width (5% - 100%) applied to form
+        .label-width-#{$i} .input-group {
+            > .label,
+            > label {
+                flex-basis: $i * 1%;
+            }
+        }
+
+        // input-group label width (5% - 100%) applied directly to label
+        .input-group {
+            > .label.width-#{$i},
+            > label.width-#{$i} {
+                flex-basis: $i * 1%;
+            }
+        }
+    }
+}

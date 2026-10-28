@@ -1,0 +1,40 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use '../scss/functions' as f;
+@use '../scss/variables' as v;
+
+@mixin classes($bp: '') {
+    .#{$bp}grid { display: grid; }
+    .#{$bp}inline-grid { display: inline-grid; }
+
+    // responsive grid: numbers specify the minimum allowed size of each item in pixels
+    @each $value in (100, 125, 150, 175, 200, 250, 300, 350, 400, 450, 500) {
+        .#{$bp}grid-#{$value} {
+            grid-template-columns: repeat(auto-fit, minmax(#{$value}px, 1fr));
+        }
+    }
+
+    // fixed grid: numbers specify the number of columns
+    @for $i from 1 through 10 {
+        .#{$bp}grid-cols-#{$i} { grid-template-columns: repeat(#{$i}, minmax(0, 1fr)); }
+        .#{$bp}grid-rows-#{$i} { grid-template-rows: repeat(#{$i}, minmax(0, 1fr)); }
+    }
+
+    // grid gaps
+    @each $size in v.$xs-xl {
+        $default: if(sass($size == "md"): ".#{$bp}gap,"; else: "");
+        #{$default}.#{$bp}gap-#{$size} { gap: var(--m-#{$size}); }
+        $default: if(sass($size == "md"): ".#{$bp}gap-x,"; else: "");
+        #{$default}.#{$bp}gap-x-#{$size} { column-gap: var(--m-#{$size}); }
+        $default: if(sass($size == "md"): ".#{$bp}gap-y,"; else: "");
+        #{$default}.#{$bp}gap-y-#{$size} { row-gap: var(--m-#{$size}); }
+    }
+}
+
+
+
+
+

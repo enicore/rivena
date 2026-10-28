@@ -1,0 +1,145 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use "../scss/variables" as v;
+@use "../modules/transition";
+
+@mixin variables {
+    --input-bg: var(--bg);
+    --input-b-color: var(--rgba-40);
+    --input-r: var(--r);
+
+    // the inputs, selects and buttons have the same font size, line height, vertical padding and border, so the same
+    // height in each size (--input-h-*)
+    --input-py-sm: .25rem;
+    --input-py-md: .4rem;
+    --input-py-lg: .6rem;
+    --input-px-sm: .6rem;
+    --input-px-md: .8rem;
+    --input-px-lg: 1rem;
+    --input-p-sm: var(--input-py-sm) var(--input-px-sm);
+    --input-p-md: var(--input-py-md) var(--input-px-md);
+    --input-p-lg: var(--input-py-lg) var(--input-px-lg);
+    --input-p: var(--input-p-md);
+
+    --input-font-sm: .9rem;
+    --input-font-md: 1rem;
+    --input-font-lg: 1.1rem;
+    --input-font: var(--input-font-md);
+
+    --input-line-height: 1.5;
+    --input-b-width: 1px;
+    --input-h-sm: calc(var(--input-font-sm) * var(--input-line-height) + 2 * var(--input-py-sm) +
+        2 * var(--input-b-width));
+    --input-h-md: calc(var(--input-font-md) * var(--input-line-height) + 2 * var(--input-py-md) +
+        2 * var(--input-b-width));
+    --input-h-lg: calc(var(--input-font-lg) * var(--input-line-height) + 2 * var(--input-py-lg) +
+        2 * var(--input-b-width));
+    --input-h: var(--input-h-md);
+}
+
+@mixin light-variables {
+    --input-bg: #fff;
+    --input-b-color: var(--rgba-25);
+}
+
+@mixin classes {
+    input[type='date'],
+    input[type='email'],
+    input[type='file'],
+    input[type='image'],
+    input[type='month'],
+    input[type='number'],
+    input[type='password'],
+    input[type='search'],
+    input[type='tel'],
+    input[type='text'],
+    input[type='time'],
+    input[type='url'],
+    input[type='week'],
+    select,
+    textarea {
+        @include input;
+
+        &.large { @include input-large; }
+        &.small { @include input-small; }
+        &:disabled { @include input-disabled; }
+
+        @each $intent, $class in v.$intent-classes {
+            #{$class}:focus {
+                border-color: var(--b-#{if(sass($intent == "default"): "primary"; else: $intent)});
+                box-shadow: 0 0 4px 0 var(--b-#{if(sass($intent == "default"): "primary"; else: $intent)});
+            }
+        }
+    }
+
+    // as wide as its longest option otherwise (e.g. the time zones), past the form on phones
+    select {
+        max-width: 100%;
+    }
+
+    // the height of its rows
+    textarea,
+    textarea.small,
+    textarea.large {
+        height: auto;
+        line-height: var(--line-height);
+    }
+
+    select option {
+        background: var(--input-bg);
+    }
+}
+
+@mixin input {
+    & {
+        position: relative;
+        color-scheme: dark;
+        outline: none;
+        border-radius: var(--input-r);
+        padding: var(--input-p);
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        border: var(--input-b-width) solid var(--input-b-color);
+        font-size: var(--input-font);
+        line-height: var(--input-line-height);
+        height: var(--input-h);
+        @include transition.colors;
+        @include transition.shadow;
+
+        html.light & {
+            color-scheme: light;
+        }
+
+        &::-webkit-calendar-picker-indicator {
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer;
+        }
+    }
+}
+
+@mixin input-disabled {
+    & {
+        cursor: not-allowed;
+        filter: opacity(60%);
+    }
+}
+
+@mixin input-large {
+    & {
+        font-size: var(--input-font-lg);
+        padding: var(--input-p-lg);
+        height: var(--input-h-lg);
+    }
+}
+
+@mixin input-small {
+    & {
+        font-size: var(--input-font-sm);
+        padding: var(--input-p-sm);
+        height: var(--input-h-sm);
+    }
+}

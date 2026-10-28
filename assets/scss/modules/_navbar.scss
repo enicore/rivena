@@ -1,0 +1,98 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@mixin classes {
+    #navbar {
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: var(--box-default);
+        border-bottom: 1px solid var(--rgba-10);
+
+        ul ul {
+            padding: .5em 0;
+        }
+    }
+
+    #navbar,
+    #sidebar {
+        display: flex;
+
+        ul {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                position: relative;
+                padding: 0;
+                margin: var(--m-xs);
+
+                a,
+                button {
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none !important;
+                    cursor: pointer;
+                    padding: var(--p-xs);
+                    margin: 0;
+                    border-radius: var(--r);
+                    transition: 0.3s;
+                    color: var(--text-color);
+
+                    &:hover,
+                    &.active {
+                        background-color: var(--rgba-10);
+                        filter: var(--hover);
+                    }
+
+                    .text {
+                        margin-left: var(--m);
+                    }
+
+                    &.dropdown {
+                        position: relative;
+                        display: flex;
+                        z-index: 9999;
+
+                        & ~ ul {
+                            display: none;
+                            position: absolute;
+                            left: 0;
+                            min-width: max(100%, 12rem);
+                            white-space: nowrap;
+                            z-index: 9999;
+                            border-radius: var(--r);
+                            // opaque: the page's background with the navbar's tint
+                            background-color: var(--bg);
+                            background-image: linear-gradient(var(--box-default), var(--box-default));
+                            border: 1px solid var(--rgba-10);
+
+                            &.right {
+                                left: auto;
+                                right: 0;
+                            }
+
+                            a {
+                                padding-left: 1em;
+                                padding-right: 1em;
+
+                                // the items' icons (icon-*)
+                                &:before {
+                                    margin-right: var(--icon-m-sm);
+                                }
+                            }
+                        }
+
+                        &.menu-visible ~ ul {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,82 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+// modal mask used for displaying modal dialogs and other content
+
+@mixin classes {
+    .dialog-mask,
+    .modal-mask{
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9998;
+        display: none;
+
+        &.visible {
+            display: block;
+        }
+
+        &.message .dialog .dialog-message {
+            display: flex;
+        }
+
+        .dialog {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            // narrower on phones, with a margin
+            min-width: min(400px, calc(100vw - 2rem));
+            min-height: 200px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg);
+            border: 1px solid var(--rgba-20);
+
+            .dialog-title {
+                padding: 15px;
+                border-bottom: 1px solid var(--rgba-20);
+
+                button {
+                    background: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    padding: 3px;
+                    float: right;
+                }
+            }
+
+            .dialog-message {
+                display: none;
+                margin: 15px 15px 0 15px;
+                padding: 10px;
+            }
+
+            .dialog-contents {
+                padding: 15px;
+                flex: 1;
+            }
+
+            .dialog-buttons {
+                padding: 15px;
+                text-align: right;
+                border-top: 1px solid var(--rgba-20);
+
+                button {
+                    margin-right: 10px;
+                    min-width: 75px;
+                }
+            }
+        }
+    }
+
+    // when a modal dialog is open, prevent the page content from scrolling
+    body.dialog-visible,
+    body.modal-visible {
+        height: 100vh;
+        overflow-y: hidden;
+    }
+}

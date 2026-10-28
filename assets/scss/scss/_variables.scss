@@ -1,0 +1,107 @@
+
+@use "sass:map";
+
+$breakpoints: () !default;
+$breakpoints: map.merge((
+    sm: 640px,
+    md: 768px,
+    lg: 1024px,
+    xl: 1280px,
+), $breakpoints);
+
+$colors: () !default;
+$colors: map.merge((
+    "gray": #737373,
+    "stone": #78716c,
+    "zinc": #75757c,
+    "brown": #795548,
+    "slate": #525f7a,
+    "cyan": #0891B2,
+    "sky": #0284C7,
+    "blue": #2563EB,
+    "indigo": #4F46E5,
+    "violet": #7C3AED,
+    "purple": #9333EA,
+    "magenta": #C026D3,
+    "pink": #DB2777,
+    "rose": #E11D48,
+    "red": #DC2626,
+    "orange": #EA580C,
+    "amber": #D97706,
+    "yellow": #CA8A04,
+    "lime": #65A30D,
+    "green": #16A34A,
+    "emerald": #059669,
+    "teal": #0D9488,
+), $colors);
+
+$shades: () !default;
+$shades: map.merge((
+    950: 15,
+    900: 20,
+    850: 30,
+    800: 40,
+    750: 50,
+    700: 60,
+    650: 70,
+    600: 80,
+    550: 90,
+    500: 100,
+    450: -85,
+    400: -70,
+    350: -55,
+    300: -40,
+    250: -30,
+    200: -20,
+    150: -15,
+    100: -10,
+    50: -5,
+), $shades);
+
+$intent-colors: (
+    "default": "zinc",
+    "primary": "sky",
+    "success": "teal",
+    "warning": "orange",
+    "danger": "red",
+    "info": "yellow",
+) !default;
+
+$intent-classes: (
+    "default": "&",
+    "primary": "&.primary",
+    "success": "&.success",
+    "warning": "&.warning",
+    "danger": "&.danger",
+    "info": "&.info",
+) !default;
+
+// utility variables
+
+$default-color: map.get($intent-colors, "default");
+$primary-color: map.get($intent-colors, "primary");
+$success-color: map.get($intent-colors, "success");
+$warning-color: map.get($intent-colors, "warning");
+$danger-color: map.get($intent-colors, "danger");
+$info-color: map.get($intent-colors, "info");
+
+$breakpoint-sm: map.get($breakpoints, "sm");
+$breakpoint-md: map.get($breakpoints, "md");
+$breakpoint-lg: map.get($breakpoints, "lg");
+
+$breakpoint-prefixes: (
+    'sm\\:': map.get($breakpoints, sm),
+    'md\\:': map.get($breakpoints, md),
+    'lg\\:': map.get($breakpoints, lg),
+);
+
+$xxs-xxl: (xxs, xs, sm, md, lg, xl, xxl);
+$xs-xl: (xs, sm, md, lg, xl);
+
+$sides: (
+    "": "",
+    t: "-top",
+    r: "-right",
+    b: "-bottom",
+    l: "-left",
+);

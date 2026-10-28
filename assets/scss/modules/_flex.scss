@@ -1,0 +1,71 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@mixin classes($bp: '') {
+    .#{$bp}flex { display: flex; }
+    .#{$bp}inline-flex { display: inline-flex; }
+
+    .#{$bp}flex-row { flex-direction: row; }
+    .#{$bp}flex-row-reverse { flex-direction: row-reverse; }
+    .#{$bp}flex-col { flex-direction: column; }
+    .#{$bp}flex-col-reverse { flex-direction: column-reverse; }
+
+    .#{$bp}flex-wrap { flex-wrap: wrap; }
+    .#{$bp}flex-wrap-reverse { flex-wrap: wrap-reverse; }
+    .#{$bp}flex-nowrap { flex-wrap: nowrap; }
+
+    .#{$bp}justify-start { justify-content: flex-start; }
+    .#{$bp}justify-end { justify-content: flex-end; }
+    .#{$bp}justify-center { justify-content: center; }
+    .#{$bp}justify-between { justify-content: space-between; }
+    .#{$bp}justify-around { justify-content: space-around; }
+    .#{$bp}justify-evenly { justify-content: space-evenly; }
+
+    .#{$bp}items-start { align-items: flex-start; }
+    .#{$bp}items-end { align-items: flex-end; }
+    .#{$bp}items-center { align-items: center; }
+    .#{$bp}items-baseline { align-items: baseline; }
+    .#{$bp}items-stretch { align-items: stretch; }
+
+    .#{$bp}content-start { align-content: flex-start; }
+    .#{$bp}content-end { align-content: flex-end; }
+    .#{$bp}content-center { align-content: center; }
+    .#{$bp}content-between { align-content: space-between; }
+    .#{$bp}content-around { align-content: space-around; }
+    .#{$bp}content-evenly { align-content: space-evenly; }
+
+    .#{$bp}self-auto { align-self: auto; }
+    .#{$bp}self-start { align-self: flex-start; }
+    .#{$bp}self-end { align-self: flex-end; }
+    .#{$bp}self-center { align-self: center; }
+    .#{$bp}self-stretch { align-self: stretch; }
+
+    .#{$bp}flex-1 { flex: 1 1 0; }
+    .#{$bp}flex-auto { flex: 1 1 auto; }
+    .#{$bp}flex-initial { flex: 0 1 auto; }
+    .#{$bp}flex-none { flex: none; }
+    .#{$bp}flex-grow { flex-grow: 1; }
+    .#{$bp}flex-grow-0 { flex-grow: 0; }
+    .#{$bp}flex-shrink { flex-shrink: 1; }
+    .#{$bp}flex-shrink-0 { flex-shrink: 0; }
+
+    .#{$bp}basis-auto { flex-basis: auto; }
+    .#{$bp}basis-0 { flex-basis: 0; }
+
+    .#{$bp}order-none { order: 0; }
+    .#{$bp}order-1 { order: 1; }
+    .#{$bp}order-2 { order: 2; }
+    .#{$bp}order-3 { order: 3; }
+    .#{$bp}order-4 { order: 4; }
+    .#{$bp}order-5 { order: 5; }
+    .#{$bp}order-6 { order: 6; }
+    .#{$bp}order-7 { order: 7; }
+    .#{$bp}order-8 { order: 8; }
+    .#{$bp}order-9 { order: 9; }
+    .#{$bp}order-10 { order: 10; }
+    .#{$bp}order-first { order: -9999; }
+    .#{$bp}order-last { order: 9999; }
+}
+

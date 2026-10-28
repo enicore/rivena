@@ -1,0 +1,48 @@
+
+@mixin classes($bp: '') {
+    .#{$bp}relative { position: relative; }
+    .#{$bp}absolute { position: absolute; }
+    .#{$bp}fixed { position: fixed; }
+
+    .#{$bp}position-left { left: 0; right: auto; }
+    .#{$bp}position-right { left: auto; right: 0; }
+    .#{$bp}position-center-x { left: 50%; right: auto; transform: translateX(-50%); }
+    .#{$bp}position-center-y { top: 50%; bottom: auto; transform: translateY(-50%); }
+
+    .#{$bp}display-block { display: block; }
+    .#{$bp}display-inline { display: inline; }
+    .#{$bp}display-inline-block { display: inline-block; }
+    .#{$bp}display-none { display: none; }
+
+    .#{$bp}visible { visibility: visible }
+    .#{$bp}hidden { visibility: hidden }
+
+    .#{$bp}float-right { float: right; }
+    .#{$bp}float-left { float: left; }
+
+    .#{$bp}width-full { width: 100% !important; }
+    .#{$bp}width-auto { width: auto !important; }
+    // flex items (and inputs) can shrink below their content's width
+    .#{$bp}min-width-0 { min-width: 0; }
+
+    .#{$bp}overflow-auto   { overflow: auto; }
+    .#{$bp}overflow-hidden { overflow: hidden; }
+    .#{$bp}overflow-visible { overflow: visible; }
+    .#{$bp}overflow-scroll { overflow: scroll; }
+
+    .#{$bp}overflow-x-auto   { overflow-x: auto; }
+    .#{$bp}overflow-x-hidden { overflow-x: hidden; }
+    .#{$bp}overflow-x-visible { overflow-x: visible; }
+    .#{$bp}overflow-x-scroll { overflow-x: scroll; }
+
+    .#{$bp}overflow-y-auto   { overflow-y: auto; }
+    .#{$bp}overflow-y-hidden { overflow-y: hidden; }
+    .#{$bp}overflow-y-visible { overflow-y: visible; }
+    .#{$bp}overflow-y-scroll { overflow-y: scroll; }
+
+    @for $i from 1 through 10 {
+        .#{$bp}width-#{$i * 10} { width: $i * 10 * 1%; }
+        .#{$bp}min-width-#{$i * 10} { min-width: $i * 10 * 1%; }
+        .#{$bp}max-width-#{$i * 10} { max-width: $i * 10 * 1%; }
+    }
+}

@@ -1,0 +1,169 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use "../scss/functions" as f;
+@use "transition";
+
+@mixin classes {
+    // ******************************* switches *******************************
+
+    label.switch {
+        position: relative;
+        display: inline-block;
+        font-size: 1rem;
+        padding: 0;
+        width: 2rem;
+        height: 1.2rem;
+        border-radius: 1rem;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        border: 1px solid rgb(255 255 255 / .4);
+        background-color: var(--rgba-20);
+        @include transition.all;
+
+        &.large {
+            width: 3rem;
+            height: 1.6rem;
+            font-size: 1.35rem;
+        }
+
+        &:before {
+            position: absolute;
+            display: block;
+            content: '';
+            top: 1px;
+            left: 1px;
+            bottom: 1px;
+            width: 1em;
+            border-radius: 50%;
+            background-color: #{f.color('gray', 50)};
+        }
+    }
+
+    input.switch {
+        opacity: 0 !important;
+        position: absolute !important;
+
+        &[disabled] + label.switch {
+            @include checkbox-disabled;
+        }
+
+        &:not([disabled]) + label.switch:hover {
+            filter: brightness(115%);
+        }
+
+        &:focus-visible + label.switch {
+            outline: 2px solid var(--b-primary);
+            outline-offset: 2px;
+        }
+
+        &:checked {
+            & + label.switch {
+                @include checkbox-checked;
+
+                &:before {
+                    left: auto;
+                    right: 1px;
+                }
+            }
+        }
+    }
+
+    // ******************************* checkboxes and radio boxes *******************************
+
+    input[type="checkbox"],
+    *:not(.tabs) > input[type="radio"] {
+        position: relative;
+        width: 1.1rem;
+        height: 1.1rem;
+        cursor: pointer;
+        -moz-appearance: initial; // enable customizing on firefox
+
+        &.large {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        &:disabled {
+            @include checkbox-disabled;
+        }
+
+        &:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: block;
+            content: "";
+            border-radius: 50%;
+            border: 1px solid var(--rgba-10);
+            //background-color: var(--rgba-2);
+            @include transition.all;
+        }
+
+        &:hover:not([disabled]) {
+            &:not(:checked):before {
+                border-color: var(--rgba-40);
+            }
+
+            &:checked:before {
+                filter: brightness(115%);
+            }
+        }
+
+        &:checked {
+            &:before {
+                @include checkbox-checked;
+            }
+
+            &:after {
+                display: block;
+                position: absolute;
+                background: transparent !important;
+                content: "";
+                top: 1px;
+                left: 1px;
+                right: 1px;
+                bottom: 1px;
+                border-radius: 50%;
+                border: .2em solid #eee;
+            }
+        }
+    }
+
+    // ******************************* checkboxes only *******************************
+
+    input[type="checkbox"] {
+        &:before {
+            border-radius: 2px;
+        }
+
+        &:checked:after {
+            top: 14%;
+            left: 36%;
+            height: 46%;
+            width: 20%;
+            transform: rotate(40deg);
+            border-width: 2px;
+            border-style: solid;
+            border-top: none;
+            border-left: none;
+            border-radius: 0;
+        }
+    }
+}
+
+@mixin checkbox-checked {
+    & {
+        background-color: var(--button-primary);
+    }
+}
+
+@mixin checkbox-disabled {
+    cursor: not-allowed;
+    filter: opacity(50%);
+}

@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+// RivenaSpa's loader: <div id="page-loader"><div class="icon-loader a-spin"></div></div> over the page, shown while a
+// page loads (body.spa-loading), after --spa-loader-delay, so fast pages don't flash it; set --spa-loader-bg to cover
+// the old content
+
+@mixin classes {
+    #page-loader {
+        position: absolute;
+        inset: 0;
+        background: var(--spa-loader-bg, transparent);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 9999;
+
+        & div {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -2rem 0 0 -2rem;
+            font-size: 4rem;
+            opacity: .3;
+        }
+
+        body.spa-loading & {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition-delay: var(--spa-loader-delay, .15s);
+        }
+    }
+
+    // RivenaSpa focuses the content after loading a page, for screen readers; no focus outline
+    #content:focus {
+        outline: none;
+    }
+}

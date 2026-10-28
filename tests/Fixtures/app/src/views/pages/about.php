@@ -1,0 +1,1 @@
+<about><?= ($view ?? '') . ($data ?? '') . ($file ?? '') ?></about>

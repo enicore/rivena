@@ -1,0 +1,24 @@
+
+@use "sass:color";
+@use "sass:map";
+@use "sass:math";
+@use "variables" as v;
+
+@function color($color, $shade) {
+    $percent: map.get(v.$shades, $shade);
+    @return color.mix(map.get(v.$colors, $color), if(sass($percent < 0): #fff; else: #000), math.abs($percent) * 1%);
+}
+
+@function rgba-background($base, $value) {
+    @return rgba($base,$base,$base,calc($value * 0.01));
+}
+
+@function filter-modules($include, $exclude) {
+    $result: ();
+    @each $module in $include {
+        @if index($exclude, $module) == null {
+            $result: append($result, $module);
+        }
+    }
+    @return $result;
+}

@@ -1,0 +1,7 @@
+/.idea
+/.phpunit.cache
+/vendor
+/coverage-report
+.env
+*.map
+/dev

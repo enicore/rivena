@@ -1,0 +1,117 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+// The colors css variables and classes are not included in this file. They are available separately in
+// rivena_colors.css to keep the output css file smaller.
+
+@forward "scss/variables";
+@forward "modules/icon";
+@forward "modules/size" show size;
+@forward "modules/typography" show $font-path;
+
+@use "scss/variables";
+@use "modules/admin";
+@use "modules/animation";
+@use "modules/border";
+@use "modules/box";
+@use "modules/button";
+@use "modules/checkbox";
+@use "modules/common";
+@use "modules/filter";
+@use "modules/flex";
+@use "modules/grid";
+@use "modules/html";
+@use "modules/input-group";
+@use "modules/input";
+@use "modules/margin";
+@use "modules/modal";
+@use "modules/navbar";
+@use "modules/padding";
+@use "modules/popup";
+@use "modules/rgba";
+@use "modules/shadow";
+@use "modules/sidebar";
+@use "modules/spa";
+@use "modules/size";
+@use "modules/icon";
+@use "modules/table";
+@use "modules/tab";
+@use "modules/transition";
+@use "modules/typography";
+@use "modules/z-index";
+
+@include typography.font-face;
+
+:root {
+    @include animation.variables;
+    @include border.variables;
+    @include box.variables;
+    @include button.variables;
+    @include html.variables;
+    @include filter.variables;
+    @include icon.variables;
+    @include input.variables;
+    @include margin.variables;
+    @include padding.variables;
+    @include rgba.variables;
+    @include shadow.variables;
+    @include transition.variables;
+    @include typography.variables;
+}
+
+html.light {
+    @include border.light-variables;
+    @include box.light-variables;
+    @include box.light-variables;
+    @include button.light-variables;
+    @include html.light-variables;
+    @include filter.light-variables;
+    @include input.light-variables;
+    @include rgba.light-variables;
+    @include typography.light-variables;
+    @include shadow.light-variables;
+}
+
+@include html.classes; // must be first as not to overwrite element-specific styles
+@include admin.classes;
+@include box.classes;
+@include button.classes;
+@include checkbox.classes;
+@include input-group.classes;
+@include input.classes;
+@include modal.classes;
+@include navbar.classes;
+@include popup.classes;
+@include table.classes;
+@include tab.classes;
+@include sidebar.classes;
+@include spa.classes;
+@include icon.classes;
+@include size.classes;
+@include rgba.classes;
+@include z-index.classes;
+
+@mixin classes($bp: '') {
+    @include animation.classes($bp);
+    @include border.classes($bp);
+    @include common.classes($bp);
+    @include filter.classes($bp);
+    @include flex.classes($bp);
+    @include grid.classes($bp);
+    @include margin.classes($bp);
+    @include padding.classes($bp);
+    @include shadow.classes($bp);
+    @include transition.classes($bp);
+    @include typography.classes($bp);
+    @include z-index.classes($bp);
+}
+
+@include classes;
+
+@each $bp, $size in variables.$breakpoint-prefixes {
+    @media (min-width: $size) {
+        @include classes($bp);
+    }
+}

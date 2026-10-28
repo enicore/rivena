@@ -1,0 +1,26 @@
+# environment: dev or production
+app_env=dev
+
+# encryption key
+app_key=
+
+# the site's https:// address (links in emails, WebAuthn, etc.)
+site_url=
+
+# IDs of admin users (users can be made admins ONLY by adding their IDs here)
+admins=
+
+# DB settings
+db_host=
+db_port=
+db_database=
+db_username=
+db_password=
+
+# SMTP settings for sending emails (password resets, 2FA change notifications, etc.)
+smtp_host=
+smtp_port=587
+smtp_timeout=10
+smtp_username=
+smtp_password=
+mail_from=

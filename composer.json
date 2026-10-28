@@ -1,0 +1,57 @@
+{
+    "name": "enicore/rivena",
+    "description": "A PHP framework for admin-focused websites.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Enicore Solutions",
+            "homepage": "https://enicore.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Enicore\\Rivena\\": "src/"
+        },
+        "files": [
+            "src/Functions/web.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/rivena"
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.4",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-openssl": "*",
+        "ext-zlib": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
+        "enshrined/svg-sanitize": "^1.0",
+        "illuminate/database": "^13.0",
+        "matthiasmullie/minify": "^1.3",
+        "php-di/php-di": "^7.1",
+        "psr/container": "^2.0",
+        "psr/http-message": "^1.1 || ^2.0",
+        "psr/http-server-middleware": "^1.0",
+        "slim/psr7": "^1.8",
+        "slim/slim": "^4.15",
+        "maxmind-db/reader": "^1.12",
+        "donatj/phpuseragentparser": "^1.12",
+        "phpmailer/phpmailer": "^7.1",
+        "bacon/bacon-qr-code": "^3.1",
+        "report-uri/passkeys-php": "^2.0",
+        "bjeavons/zxcvbn-php": "^1.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0"
+    }
+}

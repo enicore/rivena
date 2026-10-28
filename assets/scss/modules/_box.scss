@@ -1,0 +1,89 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use "../scss/functions" as f;
+@use "../scss/variables" as v;
+@use "transition";
+@use "rgba";
+
+@mixin variables {
+    --box-default: var(--rgba-8);
+    --box-primary: #{f.color(v.$primary-color, 750)};
+    --box-success: #{f.color(v.$success-color, 750)};
+    --box-warning: #{f.color(v.$warning-color, 750)};
+    --box-danger:  #{f.color(v.$danger-color,  750)};
+    --box-info:    #{f.color(v.$info-color,    700)};
+    --box-color: var(--box-default);
+    --box-b: 1px solid var(--rgba-15);
+}
+
+@mixin light-variables {
+    --box-default: var(--rgba-4);
+    --box-primary: #{f.color(v.$primary-color, 150)};
+    --box-success: #{f.color(v.$success-color, 150)};
+    --box-warning: #{f.color(v.$warning-color, 150)};
+    --box-danger:  #{f.color(v.$danger-color,  150)};
+    --box-info:    #{f.color(v.$info-color,    150)};
+    --box-b: 1px solid var(--rgba-6);
+}
+
+@mixin classes {
+    .box,
+    .card,
+    .alert {
+        @include box;
+
+        &.primary { background-color: var(--box-primary); }
+        &.success { background-color: var(--box-success); }
+        &.warning { background-color: var(--box-warning); }
+        &.danger { background-color: var(--box-danger); }
+        &.info { background-color: var(--box-info); }
+    }
+
+    .alert {
+        :last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        &[class^="icon-"],
+        &[class*=" icon-"] {
+            display: flex;
+            gap: var(--m);
+
+            &:before {
+                line-height: 1;
+                font-size: var(--icon-lg);
+            }
+        }
+    }
+
+
+    .box-color, .box-default { background-color: var(--box-default); }
+    .box-primary { background-color: var(--box-primary); }
+    .box-success { background-color: var(--box-success); }
+    .box-warning { background-color: var(--box-warning); }
+    .box-danger { background-color: var(--box-danger); }
+    .box-info { background-color: var(--box-info); }
+}
+
+@mixin box($intent: default) {
+    @include transition.shadow;
+    position: relative;
+    align-items: center;
+    margin: 0;
+    padding: var(--p-lg);
+    border: var(--box-b);
+    border-radius: var(--r);
+    background-color: var(--box-#{$intent});
+}
+
+@mixin box-primary { @include box('primary') }
+@mixin box-success { @include box('success') }
+@mixin box-warning { @include box('warning') }
+@mixin box-danger { @include box('danger') }
+@mixin box-info { @include box('info') }
+
+

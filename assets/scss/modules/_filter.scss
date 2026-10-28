@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@use '../scss/functions' as f;
+
+@mixin variables {
+    --blur-xs: 4px;
+    --blur-sm: 8px;
+    --blur-md: 12px;
+    --blur-lg: 16px;
+    --blur-xl: 24px;
+
+    --vivid: brightness(115%);
+    --muted: brightness(80%);
+    --hover: brightness(130%);
+}
+
+@mixin light-variables {
+    --vivid: brightness(95%);
+    --muted: brightness(115%);
+    --hover: brightness(115%);
+}
+
+@mixin classes($bp: '') {
+    @if $bp == '' {
+        .vivid { filter: var(--vivid); }
+        .muted { filter: var(--muted); }
+        .hover { filter: var(--hover); }
+    }
+
+    .#{$bp}blur-xs { filter: blur(var(--blur-xs)); }
+    .#{$bp}blur-sm { filter: blur(var(--blur-sm)); }
+    .#{$bp}blur, .#{$bp}blur-md { filter: blur(var(--blur-md)); }
+    .#{$bp}blur-lg { filter: blur(var(--blur-lg)); }
+    .#{$bp}blur-xl { filter: blur(var(--blur-xl)); }
+
+    .#{$bp}grayscale { filter: grayscale(100%) }
+    .#{$bp}invert { filter: invert(100%) }
+    .#{$bp}sepia { filter: sepia(100%) }
+
+    @for $i from 0 through 10 {
+        .#{$bp}opacity-#{$i * 10} { opacity: calc($i / 10) }
+        .#{$bp}saturate-#{$i * 10} { filter: saturate(calc($i / 10)) }
+    }
+}
+
+
+

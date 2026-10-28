@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use '../scss/functions' as f;
+@use '../scss/variables' as v;
+
+@mixin variables {
+    --m-0: 0;
+    --m-auto: auto;
+    --m-xxs: .1rem;
+    --m-xs: .25rem;
+    --m-sm: .5rem;
+    --m-md: 1rem;
+    --m-lg: 1.5rem;
+    --m-xl: 3rem;
+    --m-xxl: 6rem;
+    --m: var(--m-md);
+}
+
+@mixin classes($bp: '') {
+    .#{$bp}m-0   { margin: 0; }
+    .#{$bp}mt-0   { margin-top: 0; }
+    .#{$bp}mr-0   { margin-right: 0; }
+    .#{$bp}mb-0   { margin-bottom: 0; }
+    .#{$bp}ml-0   { margin-left: 0; }
+    .#{$bp}mx-0   { margin-left: 0; margin-right: 0; }
+    .#{$bp}my-0   { margin-top: 0; margin-bottom: 0; }
+
+    .#{$bp}m-auto { margin: auto; }
+    .#{$bp}mt-auto { margin-top: auto; }
+    .#{$bp}mr-auto { margin-right: auto; }
+    .#{$bp}mb-auto { margin-bottom: auto; }
+    .#{$bp}ml-auto { margin-left: auto; }
+    .#{$bp}mx-auto { margin-left: auto; margin-right: auto; }
+    .#{$bp}my-auto { margin-top: auto; margin-bottom: auto; }
+
+    // .m-sm .mt-sm ... .m,.m-md .mt,.mt-md ... .m-lg .mt-lg
+    @each $size in v.$xxs-xxl {
+        @each $s, $side in v.$sides {
+            $default: if(sass($size == "md"): ".#{$bp}m#{$s},"; else: "");
+            #{$default}.#{$bp}m#{$s}-#{$size} { margin#{$side}: var(--m-#{$size}); }
+        }
+
+        $default: if(sass($size == "md"): ".#{$bp}mx,"; else: "");
+        #{$default}.#{$bp}mx-#{$size} { margin-left: var(--m-#{$size}); margin-right: var(--m-#{$size}); }
+        $default: if(sass($size == "md"): ".#{$bp}my,"; else: "");
+        #{$default}.#{$bp}my-#{$size} { margin-top: var(--m-#{$size}); margin-bottom: var(--m-#{$size}); }
+    }
+}

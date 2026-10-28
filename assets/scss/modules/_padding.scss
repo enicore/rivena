@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use '../scss/functions' as f;
+@use '../scss/variables' as v;
+
+@mixin variables {
+    --p-xxs: .1rem;
+    --p-xs: .4rem;
+    --p-sm: .6rem;
+    --p-md: 1rem;
+    --p-lg: 1.75rem;
+    --p-xl: 3.5rem;
+    --p-xxl: 7rem;
+    --p: var(--p-md);
+}
+
+@mixin classes($bp: '') {
+    .#{$bp}p-0   { padding: 0; }
+    .#{$bp}pt-0   { padding-top: 0; }
+    .#{$bp}pr-0   { padding-right: 0; }
+    .#{$bp}pb-0   { padding-bottom: 0; }
+    .#{$bp}pl-0   { padding-left: 0; }
+    .#{$bp}px-0   { padding-left: 0; padding-right: 0; }
+    .#{$bp}py-0   { padding-top: 0; padding-bottom: 0; }
+
+    // .p-xs .pt-xs ... .p,.p-md .pt,.pt-md ... .p-lg .pt-lg
+    @each $size in v.$xxs-xxl {
+        @each $s, $side in v.$sides {
+            $default: if(sass($size == "md"): ".#{$bp}p#{$s},"; else: "");
+            #{$default}.#{$bp}p#{$s}-#{$size} { padding#{$side}: var(--p-#{$size}); }
+        }
+
+        $default: if(sass($size == "md"): ".#{$bp}px,"; else: "");
+        #{$default}.#{$bp}px-#{$size} { padding-left: var(--p-#{$size}); padding-right: var(--p-#{$size}); }
+        $default: if(sass($size == "md"): ".#{$bp}py,"; else: "");
+        #{$default}.#{$bp}py-#{$size} { padding-top: var(--p-#{$size}); padding-bottom: var(--p-#{$size}); }
+    }
+}
+
+

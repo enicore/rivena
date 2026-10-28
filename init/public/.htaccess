@@ -1,0 +1,5 @@
+# all requests that aren't files go to index.php (Slim's routing)
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

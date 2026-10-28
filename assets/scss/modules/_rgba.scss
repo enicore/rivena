@@ -1,0 +1,47 @@
+@use "sass:map";
+@use "../scss/functions" as f;
+
+@mixin variables {
+    // --rgba-1 ... --rgba-9
+    @for $i from 1 through 9 {
+        --rgba-#{$i}: #{f.rgba-background(255, $i)};
+        --rgba--#{$i}: #{f.rgba-background(0, $i)};
+    }
+
+    // --rgba-10, --rgba-15 ... --rgba-95
+    $i: 10;
+    @while $i <= 95 {
+        --rgba-#{$i}: #{f.rgba-background(255, $i)};
+        --rgba--#{$i}: #{f.rgba-background(0, $i)};
+        $i: $i + 5;
+    }
+}
+
+@mixin light-variables {
+    @for $i from 1 through 9 {
+        --rgba-#{$i}: #{f.rgba-background(0, $i)};
+        --rgba--#{$i}: #{f.rgba-background(255, $i)};
+    }
+
+    $i: 10;
+    @while $i <= 95 {
+        --rgba-#{$i}: #{f.rgba-background(0, $i)};
+        --rgba--#{$i}: #{f.rgba-background(255, $i)};
+        $i: $i + 5;
+    }
+}
+
+@mixin classes {
+    @for $i from 1 through 9 {
+        .rgba-#{$i} { background-color: var(--rgba-#{$i}) };
+        .rgba--#{$i} { background-color: var(--rgba--#{$i}) };
+    }
+
+    $i: 10;
+    @while $i <= 95 {
+        .rgba-#{$i} { background-color: var(--rgba-#{$i}) };
+        .rgba--#{$i} { background-color: var(--rgba--#{$i}) };
+        $i: $i + 5;
+    }
+}
+

@@ -1,0 +1,25 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@mixin classes($bp: '') {
+    .#{$bp}z--4 { z-index: -4; }
+    .#{$bp}z--3 { z-index: -3; }
+    .#{$bp}z--2 { z-index: -2; }
+    .#{$bp}z--1 { z-index: -1; }
+    .#{$bp}z-0 { z-index: 0; }
+    .#{$bp}z-1 { z-index: 1; }
+    .#{$bp}z-2 { z-index: 2; }
+    .#{$bp}z-3 { z-index: 3; }
+    .#{$bp}z-4 { z-index: 4; }
+
+    .#{$bp}z-99 { z-index: 99; }
+    .#{$bp}z-999 { z-index: 999; }
+    .#{$bp}z-9999 { z-index: 9999; }
+    .#{$bp}z-max { z-index: 2147483647; }
+
+    .#{$bp}z-inherit { z-index: inherit; }
+    .#{$bp}z-initial { z-index: initial; }
+    .#{$bp}z-unset { z-index: unset; }
+}

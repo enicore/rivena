@@ -1,0 +1,161 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+
+@mixin classes {
+    .tabs {
+        margin-bottom: 1rem;
+
+        // hidden but focusable, so the keyboard can switch the tabs (the arrow keys)
+        & > input[type='radio'] {
+            opacity: 0 !important;
+            position: absolute !important;
+            pointer-events: none;
+        }
+
+        & > nav {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--rgba-20);
+
+            &.center {
+                justify-content: center;
+            }
+
+            &.right {
+                justify-content: flex-end;
+
+                & > label {
+                    margin: 0 0 0 .4rem;
+                }
+            }
+
+            &.fill {
+                & > label {
+                    flex: 1;
+                }
+
+                & > label:last-child {
+                    margin-right: 0;
+                }
+            }
+
+            & > label {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: .6rem 1.2rem;
+                border-top-right-radius: 6px;
+                border-top-left-radius: 6px;
+                margin: 0 .4rem 0 0;
+                background-color: var(--rgba-10);
+
+                &:hover {
+                    filter: var(--hover);
+                }
+
+                .icon {
+                    line-height: 1em;
+                }
+            }
+
+            &.underlined > label {
+                transform: translateY(2px);
+                margin: 0 !important;
+                border-bottom: 3px solid transparent;
+                background-color: transparent !important;
+
+                &:hover {
+                    border-bottom-color: var(--rgba-30);
+                    filter: var(--hover);
+                }
+            }
+
+            &.buttons {
+                border-bottom: none;
+
+                & > label {
+                    border: 1px solid var(--rgba-20);
+                    border-right: none;
+                    border-radius: 0;
+                    margin: 0 !important;
+                    background-color: transparent;
+
+                    &:first-child {
+                        border-top-left-radius: 6px;
+                        border-bottom-left-radius: 6px;
+                    }
+
+                    &:last-child {
+                        border-top-right-radius: 6px;
+                        border-bottom-right-radius: 6px;
+                        border-right: 1px solid var(--rgba-20);;
+                    }
+
+                    &:hover {
+                        color: var(--text-color);
+                        filter: var(--hover);
+                    }
+                }
+            }
+
+            &.small > label {
+                padding: .4rem 1.4rem;
+                font-size: .9em;
+            }
+
+            &.large > label {
+                padding: .9rem 2rem;
+                font-size: 1.2em;
+            }
+        }
+
+        & > section > div {
+            display: none;
+            padding: 1rem 0;
+
+            h1, h2, h3, h4, h5, h6 {
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+        }
+
+        & > section.bordered {
+            border: 1px solid var(--rgba-20);
+            border-top: none;
+            border-top: none;
+
+            & > div {
+                padding: 1rem;
+            }
+        }
+
+        @for $i from 1 through 9 {
+            & > input[type='radio']:nth-child(#{$i}):focus-visible ~ nav label:nth-child(#{$i}) {
+                outline: 2px solid var(--b-primary);
+                outline-offset: -2px;
+            }
+
+            & > input[type='radio']:nth-child(#{$i}):checked {
+                & ~ nav label:nth-child(#{$i}),
+                & ~ nav.buttons label:nth-child(#{$i}) {
+                    background-color: var(--button-primary);
+                    color: #eee;
+                }
+
+                & ~ nav.underlined label:nth-child(#{$i}) {
+                    border-color: var(--b-primary);
+                    color: var(--text-color);
+                    filter: var(--vivid);
+                }
+
+                & ~ section > div:nth-child(#{$i}) {
+                    display: block;
+                }
+            }
+        }
+    }
+}

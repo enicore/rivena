@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2025 Enicore Solutions (https://enicore.com)
+ * This software is released under the MIT License.
+ */
+@use "../scss/variables" as v;
+@use "../scss/functions" as f;
+
+@mixin variables {
+    --b-default: var(--rgba-15);
+    --b-primary: #{f.color(v.$primary-color, 400)};
+    --b-success: #{f.color(v.$success-color, 400)};
+    --b-warning: #{f.color(v.$warning-color, 400)};
+    --b-danger: #{f.color(v.$danger-color, 400)};
+    --b-info: #{f.color(v.$info-color, 400)};
+
+    --b-xs: 1px solid var(--b-default);
+    --b-sm: 2px solid var(--b-default);
+    --b-md: 3px solid var(--b-default);
+    --b-lg: 5px solid var(--b-default);
+    --b-xl: 8px solid var(--b-default);
+    --b: var(--b-xs);
+
+    --r-xs: .125rem;
+    --r-sm: .25rem;
+    --r-md: .375rem;
+    --r-lg: .5rem;
+    --r-xl: .75rem;
+    --r-full: calc(infinity * 1px);
+    --r: var(--r-sm);
+}
+
+@mixin light-variables {
+    --b-default: var(--rgba-10);
+    --b-primary: #{f.color(v.$primary-color, 400)};
+    --b-success: #{f.color(v.$success-color, 400)};
+    --b-warning: #{f.color(v.$warning-color, 400)};
+    --b-danger: #{f.color(v.$danger-color, 500)};
+    --b-info: #{f.color(v.$info-color, 400)};
+}
+
+@mixin classes($bp: '') {
+    @if $bp == '' {
+        .b-color, .b-default { border-color: var(--b-default) }
+        .b-primary { border-color: var(--b-primary) }
+        .b-success { border-color: var(--b-success) }
+        .b-warning { border-color: var(--b-default) }
+        .b-danger { border-color: var(--b-danger) }
+        .b-info { border-color: var(--b-info) }
+
+        .b-solid { border-style: solid; }
+        .b-dashed { border-style: dashed; }
+        .b-dotted { border-style: dotted; }
+        .b-double { border-style: double; }
+    }
+
+    .#{$bp}b-0 { border: 0; }
+    .#{$bp}bt-0 { border-top: 0; }
+    .#{$bp}br-0 { border-right: 0; }
+    .#{$bp}bb-0 { border-bottom: 0; }
+    .#{$bp}bl-0 { border-left: 0; }
+
+    @each $size in v.$xs-xl {
+        @each $s, $side in v.$sides {
+            $default: if(sass($size == "xs"): ".#{$bp}b#{$s},"; else: "");
+            #{$default}.#{$bp}b#{$s}-#{$size} { border#{$side}: var(--b-#{$size}) }
+        }
+    }
+
+    .#{$bp}r-0 { border-radius: 0; }
+    .#{$bp}r-full { border-radius: var(--r-full); }
+
+    @each $size in v.$xs-xl {
+        $default: if(sass($size == "md"): ".#{$bp}r,"; else: "");
+        #{$default}.#{$bp}r-#{$size} { border-radius: var(--r-#{$size}) }
+    }
+}
+
+
+
