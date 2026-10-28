@@ -1,3 +1,7 @@
-1.0.0 (2026-10-29)
+1.0.1 (2026-10-28)
+==================
+- moved dist and package.json into assets, the npm package has its own readme
+
+1.0.0 (2026-10-28)
 ==================
 - initial release

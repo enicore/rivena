@@ -49,7 +49,7 @@ final class Console
                     echo $ran ? 'Ran the migrations: ' . implode(', ', $ran) . "\n" : "The database is up to date\n";
                     break;
                 case 'publish':
-                    $this->copy(dirname(__DIR__, 2) . '/dist/fonts', 'public/fonts', true);
+                    $this->copy(dirname(__DIR__, 2) . '/assets/dist/fonts', 'public/fonts', true);
                     break;
                 case 'build':
                     new Assets($this->root)->build(true);
@@ -152,7 +152,7 @@ final class Console
         $this->copy("$rivena/src/views/admin/partials/head.php", 'src/views/admin/partials/head.php');
         $this->copy("$rivena/src/views/admin/partials/navbar.php", 'src/views/admin/partials/navbar.php');
         $this->copy("$rivena/src/views/admin/partials/sidebar.php", 'src/views/admin/partials/sidebar.php');
-        $this->copy("$rivena/dist/fonts", 'public/fonts');
+        $this->copy("$rivena/assets/dist/fonts", 'public/fonts');
 
         // the App namespace, and the fonts copied again on composer install and update
         $composer = json_decode(file_get_contents("$this->root/composer.json"), true);

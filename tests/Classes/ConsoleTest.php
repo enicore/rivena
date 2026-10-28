@@ -293,7 +293,7 @@ class ConsoleTest extends TestCase
         file_put_contents("$this->root/public/fonts/ubuntu-sans-latin.woff2", 'old');
 
         $this->assertSame([0, '', ''], $this->rivena('publish'));
-        $this->assertFileEquals(__DIR__ . '/../../dist/fonts/ubuntu-sans-latin.woff2',
+        $this->assertFileEquals(__DIR__ . '/../../assets/dist/fonts/ubuntu-sans-latin.woff2',
             "$this->root/public/fonts/ubuntu-sans-latin.woff2");
     }
 

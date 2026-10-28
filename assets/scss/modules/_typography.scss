@@ -6,8 +6,8 @@
 @use '../scss/functions' as f;
 @use "../scss/variables" as v;
 
-// the URL of Ubuntu Sans's files (dist/fonts, which `rivena publish` copies to public/fonts); false leaves the font
-// out and uses the system's font
+// the URL of Ubuntu Sans's files (assets/dist/fonts, which `rivena publish` copies to public/fonts); false leaves the
+// font out and uses the system's font
 $font-path: "/fonts" !default;
 
 $latin-range: U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2009, U+2013-2015, U+2018-201A,

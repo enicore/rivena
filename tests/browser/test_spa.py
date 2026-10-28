@@ -2,7 +2,7 @@
 Browser tests of RivenaSpa (assets/js/rivena_spa.js) with Playwright and PHP's built-in server.
 
     /opt/playwright/bin/python tests/browser/test_spa.py
-    RIVENA_SPA_FILE=dist/rivena_spa.min.js /opt/playwright/bin/python tests/browser/test_spa.py  (the built file)
+    RIVENA_SPA_FILE=assets/dist/rivena_spa.min.js /opt/playwright/bin/python tests/browser/test_spa.py  (the built file)
 """
 import os
 import socket

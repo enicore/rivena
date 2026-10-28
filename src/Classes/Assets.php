@@ -109,7 +109,7 @@ class Assets
     {
         $sources = "$this->root/src/scripts";
         $target = "$this->root/public/js/app.js";
-        $dist = dirname(__DIR__, 2) . '/dist';
+        $dist = dirname(__DIR__, 2) . '/assets/dist';
         $rivena = dirname(__DIR__, 2) . '/assets/js';
 
         if (!$force && $this->latest([$sources, $rivena, "$dist/alpine.min.js"]) < $this->oldest([$target])) {

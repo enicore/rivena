@@ -1,9 +1,8 @@
 {
     "name": "@enicore/rivena",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "The styles and scripts of Enicore Rivena",
     "main": "dist/rivena.css",
-    "files": ["assets", "dist"],
     "author": "Enicore Solutions",
     "homepage": "https://rivena.enicore.com",
     "license": "MIT",
