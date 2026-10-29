@@ -1,3 +1,7 @@
+1.0.2 (2026-10-29)
+==================
+- changed GeoIp db provider
+
 1.0.1 (2026-10-28)
 ==================
 - moved dist and package.json into assets, the npm package has its own readme

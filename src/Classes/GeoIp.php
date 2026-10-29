@@ -34,14 +34,14 @@ final class GeoIp
         }
 
         try {
-            self::$reader ??= new Reader(dirname(__DIR__) . '/resources/geoip/geo-whois-asn-country.mmdb');
+            self::$reader ??= new Reader(dirname(__DIR__) . '/resources/geoip/user-country.mmdb');
             $record = self::$reader->get($ip);
         } catch (Throwable $e) {
             error_log("GeoIp: {$e->getMessage()}");
             return null;
         }
 
-        $code = $record['country_code'] ?? null;
+        $code = $record['country']['iso_code'] ?? null;
 
         return is_string($code) && preg_match('/^[A-Za-z]{2}$/', $code) ? strtoupper($code) : null;
     }

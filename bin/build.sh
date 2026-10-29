@@ -1,7 +1,7 @@
 #!/bin/bash
 # Builds assets/dist/ from assets/ (rivena.css, rivena_colors.css, rivena.min.js, rivena_spa.min.js) and downloads
 # the latest Alpine.js 3.x, the latest Ubuntu Sans font (its Latin and Latin Extended web font subsets, variable,
-# regular and italic) and GeoIp's database (ip-location-db's geo-whois-asn-country, CC0, updated daily).
+# regular and italic) and GeoIp's database (ip-location-db's user-country, PDDL, updated daily).
 # Needs sass (Dart Sass), minify (tdewolff) and curl. For Rivena's development only; the projects don't build Rivena.
 set -eu
 cd -- "$(dirname -- "$0")/.."
@@ -11,8 +11,8 @@ sass --no-source-map --style=compressed assets/scss/rivena_colors.scss assets/di
 minify --type js -o assets/dist/rivena.min.js assets/js/rivena.js
 minify --type js -o assets/dist/rivena_spa.min.js assets/js/rivena_spa.js
 curl -fsSL "https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js" -o assets/dist/alpine.min.js
-curl -fsSL "https://cdn.jsdelivr.net/npm/@ip-location-db/geo-whois-asn-country-mmdb/geo-whois-asn-country.mmdb" \
-    -o src/resources/geoip/geo-whois-asn-country.mmdb
+curl -fsSL "https://github.com/sapics/ip-location-db/releases/download/latest/user-country.mmdb" \
+    -o src/resources/geoip/user-country.mmdb
 
 
 FONTS="https://raw.githubusercontent.com/canonical/Ubuntu-Sans-fonts/main"
