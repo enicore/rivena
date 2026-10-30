@@ -82,29 +82,33 @@ class App extends SlimApp
         try {
             Config::load($options['config_path'] ?? "$root/src/config.php", $options['env_path'] ?? "$root/.env");
 
-            // make Eloquent available in all models; it connects on the first query
-            $capsule = new Capsule();
-            $capsule->addConnection([
-                'driver' => 'mysql',
-                'host' => Config::get('db_host'),
-                'port' => Config::get('db_port'),
-                'database' => Config::get('db_database'),
-                'username' => Config::get('db_username'),
-                'password' => Config::get('db_password'),
-                'charset' => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-            ]);
-            $capsule->setAsGlobal();
-            $capsule->bootEloquent();
-
             // classes that need configuration are created here, the others are autowired
             $builder = new ContainerBuilder();
-            $builder->addDefinitions([
-                View::class => fn() => new View(["$root/src/views", __DIR__ . '/views']),
-                PDO::class => fn() => $capsule->getConnection()->getPdo(),
-                // Eloquent's database connection, for queries without models
-                Connection::class => fn() => $capsule->getConnection(),
-            ]);
+            $builder->addDefinitions([View::class => fn() => new View(["$root/src/views", __DIR__ . '/views'])]);
+
+            if (Config::get('use_database')) {
+                // make Eloquent available in all models; it connects on the first query
+                $capsule = new Capsule();
+                $capsule->addConnection([
+                    'driver' => 'mysql',
+                    'host' => Config::get('db_host'),
+                    'port' => Config::get('db_port'),
+                    'database' => Config::get('db_database'),
+                    'username' => Config::get('db_username'),
+                    'password' => Config::get('db_password'),
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_unicode_ci',
+                ]);
+                $capsule->setAsGlobal();
+                $capsule->bootEloquent();
+
+                $builder->addDefinitions([
+                    PDO::class => fn() => $capsule->getConnection()->getPdo(),
+                    // Eloquent's database connection, for queries without models
+                    Connection::class => fn() => $capsule->getConnection(),
+                ]);
+            }
+
             $builder->addDefinitions($options['services'] ?? []);
             $container = $builder->build();
         } catch (Exception $e) {
@@ -133,7 +137,8 @@ class App extends SlimApp
             $this->add(new AssetsMiddleware(new Assets($root)));
         }
 
-        $this->addRivenaRoutes();
+        // Rivena's pages need the users' tables
+        Config::get('use_database') && $this->addRivenaRoutes();
     }
 
     /**
@@ -295,8 +300,10 @@ class App extends SlimApp
      */
     public function run(?ServerRequestInterface $request = null): void
     {
-        $this->get(Config::get('user_path') . '/{path:.+}', [AdminController::class, 'notFoundRoute'])
-            ->add(AuthMiddleware::class)->add(SessionMiddleware::class);
+        if (Config::get('use_database')) {
+            $this->get(Config::get('user_path') . '/{path:.+}', [AdminController::class, 'notFoundRoute'])
+                ->add(AuthMiddleware::class)->add(SessionMiddleware::class);
+        }
 
         parent::run($request);
     }

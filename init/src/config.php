@@ -15,6 +15,14 @@ $config['site_name'] = 'Website';
 // Default: '/usr'
 $config['user_path'] = '/usr';
 
+// Whether the site has a database. Without one, the db_* values aren't needed and Rivena adds none of its pages (login,
+// account, admin).
+//
+// Type: boolean
+// Allowed: true, false
+// Default: true
+$config['use_database'] = true;
+
 // How many months the event log keeps.
 //
 // Type: integer
@@ -84,3 +92,4 @@ $config['password_min_score'] = 3;
 // Allowed: positive integer
 // Default: 25
 $config['image_max_megapixels'] = 25;
+

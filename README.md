@@ -171,7 +171,9 @@ In JS: `this.table = new Table(`${userPath}/users/list`, this.data.table, {query
 are comma-separated). Read with `Config::get('key', $default)`.
 
 - Required: `app_key`, `site_name`, `site_url` (the https:// address: links in emails, WebAuthn), `db_host`,
-  `db_port`, `db_database`, `db_username`, `db_password`
+  `db_port`, `db_database`, `db_username`, `db_password` (not with `use_database` false)
+- `use_database` (true): false for a site without a database: no Eloquent, none of Rivena's pages (`user_path`), errors
+  only in PHP's log
 - `app_env` (`dev`), `admins`, `user_path` (`/usr`)
 - Mail: `smtp_host`, `smtp_port` (587), `smtp_username`, `smtp_password`, `smtp_timeout` (10), `mail_from`
 - `error_notification_email` (at most one email an hour), `event_log_retention_months` (6)

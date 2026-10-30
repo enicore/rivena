@@ -63,6 +63,16 @@ class ConfigTest extends TestCase
     }
 
     /**
+     * Without a database (use_database=false), the db_* values aren't needed.
+     */
+    public function testWithoutDatabase(): void
+    {
+        file_put_contents("$this->dir/.env", "app_key=k\nsite_name=s\nsite_url=https://example.com\nuse_database=false\n");
+        Config::load("$this->dir/missing.php", "$this->dir/.env");
+        $this->assertFalse(Config::get('use_database'));
+    }
+
+    /**
      * Rivena's defaults, which give their types to the .env values.
      */
     public function testDefaults(): void

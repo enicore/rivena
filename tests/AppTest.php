@@ -256,6 +256,21 @@ class AppTest extends TestCase
         $this->assertSame(Capsule::connection(), $app->getContainer()->get(Connection::class));
     }
 
+    /**
+     * Without a database (use_database=false): no db_* values and none of Rivena's pages; the app's pages work.
+     */
+    public function testWithoutDatabase(): void
+    {
+        file_put_contents("$this->root/.env", "app_env=dev\napp_key=key\nsite_name=Site\n" .
+            "site_url=https://example.com\nuse_database=false\n");
+        $app = new App($this->root);
+        $app->get('/', fn($request, $response) => $response->sendText('home'));
+
+        $this->assertSame('', w_route('login'));
+        $this->assertSame(404, $this->request($app, 'GET', '/usr/login')->getStatusCode());
+        $this->assertSame('home', (string)$this->request($app, 'GET', '/')->getBody());
+    }
+
     public function testAppKey(): void
     {
         new App($this->root);

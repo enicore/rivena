@@ -17,9 +17,8 @@ use RuntimeException;
  */
 class Config
 {
-    private const array REQUIRED = [
-        'app_key', 'site_name', 'site_url', 'db_host', 'db_port', 'db_database', 'db_username', 'db_password',
-    ];
+    private const array REQUIRED = ['app_key', 'site_name', 'site_url'];
+    private const array REQUIRED_DB = ['db_host', 'db_port', 'db_database', 'db_username', 'db_password'];
     private static array $config = [];
 
     /**
@@ -39,7 +38,7 @@ class Config
             require $file;
             return $config;
         })() : [];
-        self::$config = $config + ['user_path' => '/usr',
+        self::$config = $config + ['use_database' => true, 'user_path' => '/usr',
                 'event_log_retention_months' => 6, 'two_factor_methods' => ['totp', 'webauthn'],
                 'two_factor_required' => false, 'two_factor_email_notifications' => true, 'password_min_length' => 12,
                 'password_min_score' => 3, 'password_max_length' => 60, 'image_max_megapixels' => 25,
@@ -69,7 +68,8 @@ class Config
             };
         }
 
-        $missing = array_filter(self::REQUIRED, fn($key) => (string)(self::$config[$key] ?? '') === '');
+        $required = self::$config['use_database'] ? [...self::REQUIRED, ...self::REQUIRED_DB] : self::REQUIRED;
+        $missing = array_filter($required, fn($key) => (string)(self::$config[$key] ?? '') === '');
 
         if ($missing) {
             throw new RuntimeException('Missing config values: ' . implode(', ', $missing));

@@ -1,3 +1,8 @@
+1.0.3 ()
+==================
+- added use_database config value: sites without a database
+- minor css changes
+
 1.0.2 (2026-10-29)
 ==================
 - changed GeoIp db provider

@@ -44,10 +44,10 @@
         #{$default}.#{$bp}hover-shadow-#{$size}:hover { box-shadow: var(--shadow-#{$size}); }
 
         $default: if(sass($size == "md"): ".#{$bp}drop-shadow,"; else: "");
-        #{$default}.#{$bp}shadow-#{$size} { filter: drop-shadow(var(--drop-shadow-#{$size})); }
+        #{$default}.#{$bp}drop-shadow-#{$size} { filter: drop-shadow(var(--drop-shadow-#{$size})); }
 
         $default: if(sass($size == "md"): ".#{$bp}hover-drop-shadow:hover,"; else: "");
-        #{$default}.#{$bp}hover-drop-shadow-#{$size}:hover { box-shadow: var(--drop-shadow-#{$size}); }
+        #{$default}.#{$bp}hover-drop-shadow-#{$size}:hover { filter: drop-shadow(var(--drop-shadow-#{$size})); }
     }
 }
 

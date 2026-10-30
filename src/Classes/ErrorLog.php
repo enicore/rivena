@@ -70,10 +70,12 @@ final class ErrorLog
         $message = mb_strcut(mb_scrub($message), 0, 65535);
 
         try {
-            DB::table('error_log')->where('last_at', '<', time() - self::DAYS * 86400)->delete();
-            DB::table('error_log')->upsert(['hash' => sha1("$level $message"), 'level' => $level,
-                'message' => $message, 'path' => $path, 'count' => 1, 'first_at' => time(), 'last_at' => time()],
-                ['hash'], ['path', 'last_at', 'count' => DB::raw('`count` + 1')]);
+            if (Config::get('use_database')) {
+                DB::table('error_log')->where('last_at', '<', time() - self::DAYS * 86400)->delete();
+                DB::table('error_log')->upsert(['hash' => sha1("$level $message"), 'level' => $level,
+                    'message' => $message, 'path' => $path, 'count' => 1, 'first_at' => time(), 'last_at' => time()],
+                    ['hash'], ['path', 'last_at', 'count' => DB::raw('`count` + 1')]);
+            }
         } catch (Throwable $e) {
             error_log("ErrorLog: {$e->getMessage()}");
         }

@@ -145,6 +145,20 @@ class ErrorLogTest extends TestCase
         $this->assertCount(1, $smtp->emails());
     }
 
+    /**
+     * Without a database (use_database=false), the error is only logged by PHP and emailed.
+     */
+    public function testDatabaseOff(): void
+    {
+        $smtp = new SmtpServer(['error_notification_email' => 'admin@example.com', 'use_database' => false]);
+        $this->startLog();
+
+        ErrorLog::add('error', 'Boom');
+        $this->assertSame([], $this->rows());
+        $this->assertSame('', file_get_contents($this->log));
+        $this->assertCount(1, $smtp->emails());
+    }
+
     public function testWithoutEmail(): void
     {
         $smtp = new SmtpServer();
