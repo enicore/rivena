@@ -1,3 +1,9 @@
+1.0.4 (2026-10-31)
+==================
+- added the content dialog: showDialog() shows a template of the page
+- added width and height options to the dialogs; their contents scroll
+- fixed the navbar's dropdowns showing above the dialogs
+
 1.0.3 (2026-10-31)
 ==================
 - added use_database config value: sites without a database

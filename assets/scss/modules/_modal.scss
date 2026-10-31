@@ -11,7 +11,8 @@
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.7);
-        z-index: 9998;
+        // above everything on the page, also the navbar's dropdowns (9999)
+        z-index: 10000;
         display: none;
 
         &.visible {
@@ -27,9 +28,11 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%,-50%);
-            // narrower on phones, with a margin
+            // narrower on phones, with a margin; never larger than the window, whatever the width and height set
             min-width: min(400px, calc(100vw - 2rem));
             min-height: 200px;
+            max-width: calc(100vw - 2rem);
+            max-height: calc(100vh - 2rem);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -55,9 +58,12 @@
                 padding: 10px;
             }
 
+            // only the contents scroll, the title and the buttons stay
             .dialog-contents {
                 padding: 15px;
                 flex: 1;
+                min-height: 0;
+                overflow-y: auto;
             }
 
             .dialog-buttons {
@@ -70,6 +76,18 @@
                     min-width: 75px;
                 }
             }
+        }
+
+        // the confirmation and content dialogs (admin/partials): the same width for any content, unless the options
+        // set a width or height
+        .dialog.confirm-dialog,
+        .dialog.content-dialog {
+            width: 450px;
+            min-width: 0;
+        }
+
+        .dialog.content-dialog {
+            width: 600px;
         }
     }
 

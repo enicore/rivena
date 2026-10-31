@@ -1,26 +1,21 @@
 // The confirmation dialog (admin/partials/confirm-dialog.php), opened by Controller.confirm(); with options.password,
 // it asks for the current password, which goes to the action.
-class ConfirmDialog {
-    options = null;
+class ConfirmDialog extends Dialog {
     error = '';
     busy = false;
     password = '';
-    returnFocus = null;
 
-    // shows the dialog and focuses its password field or its button
+    // shows the dialog without the previous error and password
     open(options) {
-        this.returnFocus = document.activeElement;
-        this.options = options;
         this.error = '';
         this.password = '';
-        this.$nextTick(() => this.$root.querySelector('.dialog input, .dialog-buttons button')?.focus());
+        super.open(options);
     }
 
-    // hides the dialog (not while the action runs) and gives the focus back
+    // hides the dialog, but not while the action runs
     close() {
-        if (!this.busy && this.options) {
-            this.options = null;
-            this.returnFocus?.focus?.();
+        if (!this.busy) {
+            super.close();
         }
     }
 

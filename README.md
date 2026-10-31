@@ -125,7 +125,10 @@ Styles: `src/styles/_reports.scss` with `@use "reports";` in `app.scss`. Menu li
 - Responses: `sendSuccess()`, `sendError()`, `sendFieldErrors()` (shown at the fields by `submit()`), `sendJson()`,
   `sendHtml()`, `sendText()`, `sendRedirect()`.
 - JS `Controller`: `submit(url, data, done)`, `post(url, data)`, `confirm(options, action)` (the confirmation dialog;
-  `password: true` asks for the password), `showNotification()`.
+  `password: true` asks for the password), `showDialog(options)` (the content dialog), `showNotification()`.
+- Dialogs: both are modal and in the admin layout. `showDialog({title, content: '#help', button, width, height})` shows
+  a copy of the page's `<template id="help">`; `width` and `height` (also for `confirm()`) are CSS sizes like `'600px'`
+  or `'80%'` (of the window). The contents scroll, the title and buttons stay.
 - Views: `<?= $this->partial('admin/partials/pager') ?>`, `w_route('users')`, `w_csrf()`, `w_url()`/`w_script()`/
   `w_style()`/`w_image()` (versioned asset URLs). Comments in views are PHP comments.
 

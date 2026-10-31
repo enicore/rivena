@@ -3,9 +3,11 @@
 // the admin area's path, e.g. "/adm", for the request URLs
 const userPath = document.querySelector('meta[name="user-path"]')?.content ?? '';
 
-// keeps Tab inside the dialog with the handler (@keydown.tab="trapFocus($event)"): its fields and enabled buttons
+// keeps Tab inside the dialog with the handler (@keydown.tab="trapFocus($event)"): its fields, links and enabled
+// buttons
 function trapFocus(event) {
-    const elements = [...event.currentTarget.querySelectorAll('input, select, textarea, button:not([disabled])')];
+    const selector = 'input, select, textarea, a[href], button:not([disabled])';
+    const elements = [...event.currentTarget.querySelectorAll(selector)];
 
     if (!elements.length) {
         return;
@@ -84,10 +86,17 @@ class Controller {
             .finally(() => this.busy = false);
     }
 
-    // shows the confirmation dialog; options: {title, message, button, danger, password}, action returns a promise; with
-    // password true, the dialog asks for the current password and gives it to action
+    // shows the confirmation dialog; options: {title, message, button, danger, password, width, height}, action returns
+    // a promise; with password true, the dialog asks for the current password and gives it to action; width and height
+    // as in showDialog()
     confirm(options, action) {
         window.dispatchEvent(new CustomEvent('confirm', {detail: {button: 'OK', ...options, action}}));
+    }
+
+    // shows the content dialog; options: {title, content, button, width, height}, content selects a <template> of the
+    // page whose copy the dialog shows, width and height are CSS sizes like "600px" or "80%" (of the window)
+    showDialog(options) {
+        window.dispatchEvent(new CustomEvent('content-dialog', {detail: {button: 'Close', ...options}}));
     }
 
     // shows a message at the corner for 5 seconds; type is a color class like "danger" ("success" by default)

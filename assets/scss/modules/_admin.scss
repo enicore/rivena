@@ -24,13 +24,6 @@
         }
     }
 
-    // the confirmation dialog: the same width for every message
-    .dialog.confirm-dialog {
-        width: 450px;
-        max-width: calc(100vw - 2rem);
-        min-width: 0;
-    }
-
     // a form on a page of its own (not in a dialog): not wider than its fields need
     .page-form {
         max-width: 600px;

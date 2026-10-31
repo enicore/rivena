@@ -24,5 +24,6 @@
     <div id="notifications"></div>
     <?= w_spa_data($spaPage ?? null) ?>
     <?= $this->partial('admin/partials/confirm-dialog') ?>
+    <?= $this->partial('admin/partials/content-dialog') ?>
 </body>
 </html>

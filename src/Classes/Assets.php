@@ -119,7 +119,13 @@ class Assets
         // the base classes first, so the controllers can extend them
         $minify = new JS("$rivena/rivena.js", "$rivena/rivena_spa.js");
         array_map(fn($file) => $minify->add($file), [
-            ...$this->scripts("$rivena/admin", ['controller.js', 'confirm-dialog.js', 'table.js']),
+            ...$this->scripts("$rivena/admin", [
+                'controller.js',
+                'dialog.js',
+                'confirm-dialog.js',
+                'content-dialog.js',
+                'table.js',
+            ]),
             ...$this->scripts($sources, ['app.js']),
         ]);
 
