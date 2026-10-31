@@ -1,4 +1,4 @@
-1.0.3 ()
+1.0.3 (2026-10-31)
 ==================
 - added use_database config value: sites without a database
 - minor css changes
