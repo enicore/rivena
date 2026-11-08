@@ -15,13 +15,20 @@ $config['site_name'] = 'Website';
 // Default: '/usr'
 $config['user_path'] = '/usr';
 
-// Whether the site has a database. Without one, the db_* values aren't needed and Rivena adds none of its pages (login,
-// account, admin).
+// Whether the site has a database (Eloquent). Without one, the db_* values aren't needed. Init asks to turn it on.
 //
 // Type: boolean
 // Allowed: true, false
 // Default: true
 $config['use_database'] = true;
+
+// Whether the site has the admin section: Rivena's pages at user_path (login, account, admin), its tables and the error
+// log table; needs use_database. Init asks to turn it on.
+//
+// Type: boolean
+// Allowed: true, false
+// Default: false
+$config['use_admin'] = true;
 
 // How many months the event log keeps.
 //

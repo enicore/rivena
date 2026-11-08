@@ -30,7 +30,7 @@ class ErrorLogControllerTest extends TestCase
         symlink(__DIR__ . '/../Fixtures/app/src/views', "$this->root/src/views");
         file_put_contents("$this->root/.env", "app_env=production\napp_key=key\nsite_name=Site\n" .
             "site_url=https://example.com\ndb_host=localhost\n" .
-            "db_port=3306\ndb_database=db\ndb_username=user\ndb_password=pass\nadmins=1\n");
+            "db_port=3306\ndb_database=db\ndb_username=user\ndb_password=pass\nuse_admin=true\nadmins=1\n");
         $this->app = new App($this->root);
         // ErrorLog's, which new App() sets
         restore_error_handler();

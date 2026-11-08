@@ -1,3 +1,15 @@
+1.0.5 (unreleased)
+==================
+- added use_admin config value: sites without the admin section, its tables and the error log; init asks for it
+- init asks whether to use a database, and turns the database or the admin section on when run again
+- renamed the rivena_migrations table to migrations, created with the first migration; sql/app.sql is sql/admin.sql
+- added rivena.getCookie(), getTheme() and setTheme(); setCookie() saves objects and arrays as JSON, with secure
+- added the .spinner class (a block spinning ring); the progress buttons use the same
+- moved the dialogs' partials to partials/, for any layout; showNotification() adds #notifications itself
+- added Controller.openDialog() and closeDialog() for a page's own dialog (Escape, focus, modal-visible)
+- renamed assets/js/admin to assets/js/common
+- removed the Http class: Http::wantsJson($request) is $request->wantsJson()
+
 1.0.4 (2026-10-31)
 ==================
 - added the content dialog: showDialog() shows a template of the page

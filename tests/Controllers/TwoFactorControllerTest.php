@@ -62,7 +62,7 @@ class TwoFactorControllerTest extends TestCase
     {
         file_put_contents("$this->root/.env", "app_env=production\napp_key=key\nsite_name=Site\n" .
             "site_url=https://example.com\ndb_host=localhost\n" .
-            "db_port=3306\ndb_database=db\ndb_username=user\ndb_password=pass\nadmins=1\nsmtp_host=127.0.0.1\n" .
+            "db_port=3306\ndb_database=db\ndb_username=user\ndb_password=pass\nuse_admin=true\nadmins=1\nsmtp_host=127.0.0.1\n" .
             "smtp_port=" . Config::get('smtp_port') . "\nmail_from=site@example.com\ntwo_factor_methods=totp\n$lines");
         $this->app = new App($this->root);
         // ErrorLog's, which new App() sets
@@ -355,8 +355,8 @@ class TwoFactorControllerTest extends TestCase
         $this->env("two_factor_required=true\n");
 
         // pages redirect, JSON requests get a 403 with the URL
-        $response = $this->app->handle((new ServerRequestFactory())
-            ->createServerRequest('GET', 'https://example.com/usr/users'));
+        $response = $this->app->handle(Request::from((new ServerRequestFactory())
+            ->createServerRequest('GET', 'https://example.com/usr/users')));
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame('/usr/account?tab=two-factor', $response->getHeaderLine('Location'));
         $response = $this->request('/users');

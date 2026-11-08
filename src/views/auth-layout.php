@@ -1,4 +1,3 @@
-<?php // the login, forgot password and reset password pages (AuthController), apart from the site's public layout ?>
 <!DOCTYPE html>
 <html lang="en" class="<?= w_html_class() ?>">
 <head>

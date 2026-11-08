@@ -63,13 +63,25 @@ class ConfigTest extends TestCase
     }
 
     /**
-     * Without a database (use_database=false), the db_* values aren't needed.
+     * Without a database (use_database=false), the db_* values aren't needed; no admin section by default.
      */
     public function testWithoutDatabase(): void
     {
-        file_put_contents("$this->dir/.env", "app_key=k\nsite_name=s\nsite_url=https://example.com\nuse_database=false\n");
+        file_put_contents("$this->dir/.env", "app_key=k\nsite_name=s\nsite_url=https://example.com\n" .
+            "use_database=false\n");
         Config::load("$this->dir/missing.php", "$this->dir/.env");
         $this->assertFalse(Config::get('use_database'));
+        $this->assertFalse(Config::get('use_admin'));
+    }
+
+    public function testAdminNeedsDatabase(): void
+    {
+        file_put_contents("$this->dir/.env", "app_key=k\nsite_name=s\nsite_url=https://example.com\n" .
+            "use_database=false\nuse_admin=true\n");
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Config value use_admin needs use_database');
+        Config::load("$this->dir/missing.php", "$this->dir/.env");
     }
 
     /**

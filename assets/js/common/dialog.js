@@ -1,5 +1,6 @@
-// The base of the modal dialogs (admin/partials/confirm-dialog.php and content-dialog.php): each is included once in
-// the admin layout and opened by a window event from Controller; options is null while the dialog is closed.
+// The base of the modal dialogs (partials/confirm-dialog.php and content-dialog.php): each is included once in the
+// layout (the admin layout has both) and opened by a window event from Controller; options is null while the dialog is
+// closed.
 class Dialog {
     options = null;
     returnFocus = null;

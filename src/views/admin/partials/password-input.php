@@ -1,6 +1,6 @@
 <?php use Enicore\Rivena\Classes\Config; ?>
 <?php // a new password's input, with $attributes (its id, name or x-model...): the strength bar and the reason the
-// password can't be used (passwordInput, assets/js/admin/password-input.js), and buttons that generate a password (at
+// password can't be used (passwordInput, assets/js/common/password-input.js), and buttons that generate a password (at
 // least 20 characters) and copy it ?>
 <div class="password-input" x-data="passwordInput" data-url="<?= w_route('password-strength') ?>"
      data-length="<?= max(20, Config::get('password_min_length')) ?>">

@@ -137,8 +137,7 @@ class App extends SlimApp
             $this->add(new AssetsMiddleware(new Assets($root)));
         }
 
-        // Rivena's pages need the users' tables
-        Config::get('use_database') && $this->addRivenaRoutes();
+        Config::get('use_admin') && $this->addRivenaRoutes();
     }
 
     /**
@@ -300,7 +299,7 @@ class App extends SlimApp
      */
     public function run(?ServerRequestInterface $request = null): void
     {
-        if (Config::get('use_database')) {
+        if (Config::get('use_admin')) {
             $this->get(Config::get('user_path') . '/{path:.+}', [AdminController::class, 'notFoundRoute'])
                 ->add(AuthMiddleware::class)->add(SessionMiddleware::class);
         }

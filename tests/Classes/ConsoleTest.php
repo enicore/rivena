@@ -75,7 +75,8 @@ class ConsoleTest extends TestCase
         $this->assertSame(['composer.json'], $files());
         $this->assertSame($composer, file_get_contents("$this->root/composer.json"));
 
-        // an existing .env without the database gets the site URL and app_key, and init still fails
+        // an existing .env without the database gets the site URL and app_key, init asks for the database and still
+        // fails
         file_put_contents("$this->root/.env", "mine=1\nsite_url=\napp_key=\n");
         [$code, $output] = $this->rivena('init', "example.com\n");
 
@@ -84,21 +85,23 @@ class ConsoleTest extends TestCase
         $this->assertStringStartsWith("mine=1\n", $env);
         $this->assertMatchesRegularExpression('#^site_url=https://example\.com$#m', $env);
         $this->assertMatchesRegularExpression('/^app_key=[0-9a-f]{64}$/m', $env);
-        $this->assertStringContainsString('Missing config values: db_host', $output);
+        $this->assertStringContainsString('DB host [mysql]: ', $output);
         $this->assertSame(['.env', 'composer.json'], $files());
     }
 
     /**
-     * The site URL is asked until it's one; the database until it connects, with all of name, username and password.
+     * The site URL is asked until it's one; yes or no until it's one; the database until it connects, with all of
+     * name, username and password.
      */
     public function testInitAnswers(): void
     {
-        [$code, $output] = $this->rivena('init', "not an address\nhttp://example.com/\n127.0.0.1\n1\ndb\nuser\n\n" .
-            "\n\n\n\nsecret\n");
+        [$code, $output] = $this->rivena('init', "not an address\nhttp://example.com/\nmaybe\nYes\n127.0.0.1\n1\n" .
+            "db\nuser\n\n\n\n\n\nsecret\n");
 
         $this->assertSame(1, $code);
         $this->assertMatchesRegularExpression('/\n┌─+┐\n│ RIVENA SETUP │\n└─+┘\n\n^Site URL: Enter the site\'s URL\.\n' .
-            'Site URL: DB host \[mysql\]: DB port \[3306\]: DB name: DB username: ' .
+            'Site URL: Use a database \(y\/n\) \[y\]: Enter y or n\.\nUse a database \(y\/n\) \[y\]: ' .
+            'DB host \[mysql\]: DB port \[3306\]: DB name: DB username: ' .
             'DB password: Enter the database name, username and password\.\n.*DB password: Can\'t connect: .*' .
             '\nDB host \[127\.0\.0\.1\]: \n$/msu', $output);
         $this->assertFileDoesNotExist("$this->root/.env");
@@ -139,15 +142,17 @@ class ConsoleTest extends TestCase
         mkdir("$this->root/vendor/enicore", 0777, true);
         symlink(dirname(__DIR__, 2), "$this->root/vendor/enicore/rivena");
 
-        // a wrong database password first; then the admin: a wrong email, a short and a weak password first
-        [$code, $output] = $this->rivena('init', "example.com\nmysql\n\n$this->database\nagent\nwrong\n\n\n\n\n" .
-            "agent\nadmin\nboss@example.com\nshort\nlong password\nlantern orbit 47\n");
+        // a wrong database password first; then the admin section and the admin: a wrong email, a short and a weak
+        // password first
+        [$code, $output] = $this->rivena('init', "example.com\n\nmysql\n\n$this->database\nagent\nwrong\n\n\n\n\n" .
+            "agent\n\nadmin\nboss@example.com\nshort\nlong password\nlantern orbit 47\n");
 
         $this->assertSame(0, $code);
         $this->assertStringContainsString("Can't connect: ", $output);
         $this->assertStringContainsString("Enter an email address.\n", $output);
         $this->assertStringContainsString("Use at least 12 characters.\n", $output);
         $this->assertStringContainsString("Too weak.", $output);
+        $this->assertStringContainsString("Add the admin section (y/n) [y]: ", $output);
         $this->assertStringEndsWith(self::SUCCESS, $output);
 
         $env = file_get_contents("$this->root/.env");
@@ -203,7 +208,7 @@ class ConsoleTest extends TestCase
     }
 
     /**
-     * Without answers (docker exec without -i) the admin gets the defaults: admin@ the site's host and the random
+     * Without answers (docker exec without -i) the site gets the admin section, and the admin the defaults: admin@ the site's host and the random
      * password its prompt shows.
      */
     public function testInitAdminDefaults(): void
@@ -213,7 +218,7 @@ class ConsoleTest extends TestCase
         }
 
         $this->database = 'agent_rivena_console_' . uniqid();
-        [$code, $output] = $this->rivena('init', "www.example.com\nmysql\n\n$this->database\nagent\nagent\n");
+        [$code, $output] = $this->rivena('init', "www.example.com\n\nmysql\n\n$this->database\nagent\nagent\n");
 
         $this->assertSame(0, $code);
         $this->assertStringContainsString("Admin email [admin@www.example.com]: ", $output);
@@ -226,7 +231,7 @@ class ConsoleTest extends TestCase
     }
 
     /**
-     * A new database gets Rivena's tables, then the app's migrations; an existing one the new migrations. A failed one
+     * A new database gets the admin section's tables, then the app's migrations; an existing one the new migrations. A failed one
      * isn't recorded.
      */
     public function testMigrate(): void
@@ -243,7 +248,7 @@ class ConsoleTest extends TestCase
         mkdir("$this->root/sql/migrations", 0777, true);
         file_put_contents("$this->root/sql/migrations/001-app.sql", "CREATE TABLE app (id int);\n");
         $tables = fn() => $mysql->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN);
-        $migrations = fn() => $mysql->query("SELECT name FROM rivena_migrations WHERE name LIKE 'app/%' ORDER BY name")
+        $migrations = fn() => $mysql->query("SELECT name FROM migrations WHERE name LIKE 'app/%' ORDER BY name")
             ->fetchAll(PDO::FETCH_COLUMN);
 
         $this->assertSame([0, "Ran the migrations: app/001-app.sql\n", ''], $this->rivena('migrate'));
@@ -265,9 +270,81 @@ class ConsoleTest extends TestCase
         unlink("$this->root/sql/migrations/003-bad.sql");
 
         // an existing database without the migrations' table runs them all
-        $mysql->exec('DROP TABLE rivena_migrations, app');
+        $mysql->exec('DROP TABLE migrations, app');
         $this->assertSame([0, "Ran the migrations: app/001-app.sql, app/002-app.sql\n", ''], $this->rivena('migrate'));
         $this->assertSame(['app/001-app.sql', 'app/002-app.sql'], $migrations());
+    }
+
+    /**
+     * Without a database, init asks for none and adds no admin section; run again, it asks whether to turn each on.
+     * Without the admin section the database has no tables; with it, init adds the views, tables and the first admin.
+     */
+    public function testInitAddsDatabaseAndAdmin(): void
+    {
+        if (!$mysql = $this->mysql()) {
+            $this->markTestSkipped('No MySQL server (mysql:3306)');
+        }
+
+        $this->database = 'agent_rivena_console_' . uniqid();
+        $config = fn() => file_get_contents("$this->root/src/config.php");
+
+        [$code, $output] = $this->rivena('init', "example.com\nn\n");
+        $this->assertSame(0, $code);
+        $this->assertStringNotContainsString('DB host', $output);
+        $this->assertStringNotContainsString('admin', $output);
+        $this->assertStringContainsString("\$config['use_database'] = false;", $config());
+        $this->assertStringContainsString("\$config['use_admin'] = false;", $config());
+        $this->assertFileExists("$this->root/src/views/layout.php");
+        $this->assertFileDoesNotExist("$this->root/src/views/admin/dashboard.php");
+        $this->assertMatchesRegularExpression('/^db_host=$/m', file_get_contents("$this->root/.env"));
+
+        // the database without the admin section: no tables
+        [$code, $output] = $this->rivena('init', "y\nmysql\n\n$this->database\nagent\nagent\nn\n");
+        $this->assertSame(0, $code);
+        $this->assertStringContainsString("Add the admin section (y/n) [y]: ", $output);
+        $this->assertStringContainsString("\$config['use_database'] = true;", $config());
+        $this->assertStringContainsString("\$config['use_admin'] = false;", $config());
+        $this->assertMatchesRegularExpression("/^db_database=$this->database\$/m",
+            file_get_contents("$this->root/.env"));
+        $mysql->exec("USE `$this->database`");
+        $this->assertSame([], $mysql->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN));
+
+        // the admin section: only its question; a config without its line gets it
+        file_put_contents("$this->root/src/config.php", str_replace("\$config['use_admin'] = false;", '', $config()));
+        [$code, $output] = $this->rivena('init', "\nboss@example.com\nlantern orbit 47\n");
+        $this->assertSame(0, $code);
+        $this->assertStringNotContainsString('database', $output);
+        $this->assertStringContainsString("\$config['use_admin'] = true;", $config());
+        $this->assertFileExists("$this->root/src/views/admin/dashboard.php");
+        $this->assertMatchesRegularExpression('/^admins=1$/m', file_get_contents("$this->root/.env"));
+        $this->assertSame('boss@example.com', $mysql->query('SELECT email FROM users')->fetchColumn());
+        $this->assertContains('error_log', $mysql->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN));
+    }
+
+    /**
+     * Without the admin section, migrate creates the migrations table only for the app's migrations.
+     */
+    public function testMigrateWithoutAdmin(): void
+    {
+        if (!$mysql = $this->mysql()) {
+            $this->markTestSkipped('No MySQL server (mysql:3306)');
+        }
+
+        $this->database = 'agent_rivena_console_' . uniqid();
+        mkdir("$this->root/src");
+        copy(__DIR__ . '/../../init/src/config.php', "$this->root/src/config.php");
+        file_put_contents("$this->root/.env", "app_key=k\nsite_url=https://example.com\nuse_admin=false\n" .
+            "db_host=mysql\ndb_port=3306\ndb_database=$this->database\ndb_username=agent\ndb_password=agent\n");
+        $tables = fn() => $mysql->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN);
+
+        $this->assertSame([0, "The database is up to date\n", ''], $this->rivena('migrate'));
+        $mysql->exec("USE `$this->database`");
+        $this->assertSame([], $tables());
+
+        mkdir("$this->root/sql/migrations", 0777, true);
+        file_put_contents("$this->root/sql/migrations/001-app.sql", "CREATE TABLE app (id int);\n");
+        $this->assertSame([0, "Ran the migrations: app/001-app.sql\n", ''], $this->rivena('migrate'));
+        $this->assertEqualsCanonicalizing(['app', 'migrations'], $tables());
     }
 
     /**

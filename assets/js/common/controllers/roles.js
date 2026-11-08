@@ -1,22 +1,15 @@
 // The Roles page: add and rename a role in a dialog, delete one with a confirmation.
 class RolesController extends Controller {
-    dialog = false;
     id = null; // the renamed role's, null for a new one
     name = '';
 
-    openDialog(role = null) {
-        this.dialog = true;
+    // opens the dialog for the role, or for a new one
+    edit(role = null) {
         this.id = role?.id ?? null;
         this.name = role?.name ?? '';
         this.error = '';
         this.errors = {};
-        this.$nextTick(() => this.$root.querySelector('#role-name').focus());
-    }
-
-    closeDialog() {
-        if (!this.busy) {
-            this.dialog = false;
-        }
+        this.openDialog('role');
     }
 
     save() {
@@ -24,7 +17,7 @@ class RolesController extends Controller {
 
         this.submit(`${userPath}/roles/save`, {id: this.id, name: this.name}, data => {
             this.data.roles = data.roles;
-            this.dialog = false;
+            this.dialog = null;
             this.showNotification(isNew ? 'Role added successfully.' : 'Role renamed successfully.');
         });
     }

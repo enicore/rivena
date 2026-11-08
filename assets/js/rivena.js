@@ -10,7 +10,7 @@ class Rivena {
     constructor() {
         // renews the cookies, so they last a year from the last visit
         ["theme", "sidebar-collapsed"].forEach(name => {
-            const value = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1];
+            const value = this.getCookie(name);
             value && this.setCookie(name, value);
         });
 
@@ -19,9 +19,24 @@ class Rivena {
         });
     }
 
-    // sets a cookie for a year (an empty value deletes it)
+    // returns the cookie's value (an object or array from its JSON), or null if it's missing or broken
+    getCookie(name) {
+        const value = document.cookie.split("; ").find(cookie => cookie.startsWith(`${name}=`))?.slice(name.length + 1);
+
+        try {
+            const text = value === undefined ? null : decodeURIComponent(value);
+            return /^[[{]/.test(text) ? JSON.parse(text) : text;
+        } catch {
+            return null;
+        }
+    }
+
+    // sets a cookie for a year, an object or array as JSON (an empty value or null deletes it); secure, as site_url is
+    // https
     setCookie(name, value) {
-        document.cookie = `${name}=${value}; path=/; max-age=${value ? 31536000 : 0}; samesite=lax`;
+        const text = value !== null && typeof value === "object" ? JSON.stringify(value) : String(value ?? "");
+        const maxAge = text ? 31536000 : 0;
+        document.cookie = `${name}=${encodeURIComponent(text)}; path=/; max-age=${maxAge}; samesite=lax; secure`;
     }
 
     // handles the clicks and keys of the toggles and dropdowns
@@ -88,13 +103,27 @@ class Rivena {
         });
     }
 
-    // switches between the dark and light theme
-    toggleTheme() {
-        const dark = document.documentElement.classList.contains("light");
+    // returns the theme shown: "dark" or "light"
+    getTheme() {
+        return document.documentElement.classList.contains("light") ? "light" : "dark";
+    }
+
+    // shows the theme ("dark" or "light") and saves it, if it isn't shown already
+    setTheme(theme) {
+        if (theme === this.getTheme()) {
+            return;
+        }
+
+        const dark = theme === "dark";
         document.documentElement.classList.toggle("dark", dark);
         document.documentElement.classList.toggle("light", !dark);
-        this.setCookie("theme", dark ? "dark" : "light");
+        this.setCookie("theme", theme);
         document.dispatchEvent(new CustomEvent('color-theme-changed', { detail: { dark } }));
+    }
+
+    // switches between the dark and light theme
+    toggleTheme() {
+        this.setTheme(this.getTheme() === "dark" ? "light" : "dark");
     }
 
     // shows or hides the mobile menu

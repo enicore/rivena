@@ -57,7 +57,7 @@ class AuthControllerTest extends TestCase
     {
         file_put_contents("$this->root/.env", "app_env=production\napp_key=key\nsite_name=Site\n" .
             "site_url=https://example.com\ndb_host=localhost\n" .
-            "db_port=3306\ndb_database=db\ndb_username=user\ndb_password=pass\nsmtp_host=127.0.0.1\nsmtp_port=" .
+            "db_port=3306\ndb_database=db\ndb_username=user\ndb_password=pass\nuse_admin=true\nsmtp_host=127.0.0.1\nsmtp_port=" .
             Config::get('smtp_port') . "\nmail_from=site@example.com\n$lines");
     }
 

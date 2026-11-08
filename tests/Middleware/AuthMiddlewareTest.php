@@ -2,6 +2,7 @@
 namespace Tests\Middleware;
 
 use Enicore\Rivena\Classes\Auth;
+use Enicore\Rivena\Classes\Request;
 use Enicore\Rivena\Middleware\AuthMiddleware;
 use Enicore\Rivena\Models\User;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -43,7 +44,7 @@ class AuthMiddlewareTest extends TestCase
         })->add(new AuthMiddleware());
         $userId && Auth::logIn(User::find($userId));
 
-        $request = (new ServerRequestFactory())->createServerRequest('GET', '/app/admin');
+        $request = Request::from((new ServerRequestFactory())->createServerRequest('GET', '/app/admin'));
         $json && ($request = $request->withHeader('Accept', 'application/json'));
 
         return $app->handle($request);

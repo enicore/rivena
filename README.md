@@ -7,14 +7,15 @@ admin area built in. Needs PHP 8.4 and, for development, `sass` on the web serve
 
 ```shell
 composer require enicore/rivena
-vendor/bin/rivena init      # files, composer.json, database, site address, first admin, .env
-vendor/bin/rivena migrate   # Rivena's new migrations, then the app's (sql/migrations in both)
+vendor/bin/rivena init      # files, composer.json, site address, database, admin section, first admin, .env
+vendor/bin/rivena migrate   # the admin section's new migrations, then the app's (sql/migrations in both)
 vendor/bin/rivena build     # builds the styles and scripts (dev does it on each request)
 ```
 
-Point the web server at `public/` and open `/usr`. Init asks for the site URL and the database first and fails without
-them, before creating anything (an existing .env gets what it can). It never replaces existing files; run it again to
-add what's missing.
+Point the web server at `public/` and open `/usr`. Init asks for the site URL, whether to use a database and the admin
+section, and the database, and fails without the URL or the database before creating anything (an existing .env gets
+what it can). It never replaces existing files; run it again to add what's missing, or to turn on the database or the
+admin section (it asks only about the ones that are off).
 
 ```
 .env                  dev/prod differences: database, SMTP, site_url, app_env, app_key, admins (not in git)
@@ -125,10 +126,16 @@ Styles: `src/styles/_reports.scss` with `@use "reports";` in `app.scss`. Menu li
 - Responses: `sendSuccess()`, `sendError()`, `sendFieldErrors()` (shown at the fields by `submit()`), `sendJson()`,
   `sendHtml()`, `sendText()`, `sendRedirect()`.
 - JS `Controller`: `submit(url, data, done)`, `post(url, data)`, `confirm(options, action)` (the confirmation dialog;
-  `password: true` asks for the password), `showDialog(options)` (the content dialog), `showNotification()`.
-- Dialogs: both are modal and in the admin layout. `showDialog({title, content: '#help', button, width, height})` shows
-  a copy of the page's `<template id="help">`; `width` and `height` (also for `confirm()`) are CSS sizes like `'600px'`
-  or `'80%'` (of the window). The contents scroll, the title and buttons stay.
+  `password: true` asks for the password), `showDialog(options)` (the content dialog), `showNotification()`,
+  `openDialog(name)`/`closeDialog()` (the page's own dialog: a form with Rivena's dialog markup and `x-ref="name"`,
+  shown while `dialog === 'name'`; after saving, `dialog = null`).
+- Dialogs: both are modal and in the admin layout; another layout includes the ones it uses
+  (`<?= $this->partial('partials/confirm-dialog') ?>`, `partials/content-dialog`). Notifications need nothing.
+  `showDialog({title, content: '#help', button, width, height})` shows a copy of the page's `<template id="help">`;
+  `width` and `height` (also for `confirm()`) are CSS sizes like `'600px'` or `'80%'` (of the window). The contents
+  scroll, the title and buttons stay.
+- JS `rivena`: `getCookie(name)`, `setCookie(name, value)` (a year, secure; objects and arrays as JSON, `null` or `''`
+  deletes it), `getTheme()` and `setTheme(theme)` (`'dark'` or `'light'`, fires `color-theme-changed`), `toggleTheme()`.
 - Views: `<?= $this->partial('admin/partials/pager') ?>`, `w_route('users')`, `w_csrf()`, `w_url()`/`w_script()`/
   `w_style()`/`w_image()` (versioned asset URLs). Comments in views are PHP comments.
 
@@ -175,8 +182,9 @@ are comma-separated). Read with `Config::get('key', $default)`.
 
 - Required: `app_key`, `site_name`, `site_url` (the https:// address: links in emails, WebAuthn), `db_host`,
   `db_port`, `db_database`, `db_username`, `db_password` (not with `use_database` false)
-- `use_database` (true): false for a site without a database: no Eloquent, none of Rivena's pages (`user_path`), errors
-  only in PHP's log
+- `use_database` (true): false for a site without a database (no Eloquent)
+- `use_admin` (false, needs `use_database`): false for a site without the admin section: none of Rivena's pages
+  (`user_path`) or tables, errors only in PHP's log and the emails
 - `app_env` (`dev`), `admins`, `user_path` (`/usr`)
 - Mail: `smtp_host`, `smtp_port` (587), `smtp_username`, `smtp_password`, `smtp_timeout` (10), `mail_from`
 - `error_notification_email` (at most one email an hour), `event_log_retention_months` (6)

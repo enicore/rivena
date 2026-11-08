@@ -1,4 +1,3 @@
-<?php // the public pages' layout (Controller) and the error pages', the site's design; init copies it to the project ?>
 <!DOCTYPE html>
 <html lang="en" class="<?= w_html_class() ?>">
 <head>

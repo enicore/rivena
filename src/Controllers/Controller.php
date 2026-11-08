@@ -6,7 +6,6 @@
 namespace Enicore\Rivena\Controllers;
 
 use Enicore\Rivena\Classes\GeoIp;
-use Enicore\Rivena\Classes\Http;
 use Enicore\Rivena\Classes\Request;
 use Enicore\Rivena\Classes\Response;
 use Enicore\Rivena\Classes\View;
@@ -78,7 +77,7 @@ class Controller
         $page = ['title' => $title, 'data' => $data, 'version' => Web::assetsVersion()];
 
         // the same URL gives HTML or JSON, so the browser caches them apart
-        if (!Http::wantsJson($request)) {
+        if (!$request->wantsJson()) {
             $html = $this->view->getLayoutHtml($view, $data + ['title' => $title, 'spaPage' => $page], $this->layout);
             return $response->sendHtml($html, $code)->withHeader('Vary', 'Accept');
         }

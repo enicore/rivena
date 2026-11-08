@@ -1,4 +1,4 @@
-// The confirmation dialog (admin/partials/confirm-dialog.php), opened by Controller.confirm(); with options.password,
+// The confirmation dialog (partials/confirm-dialog.php), opened by Controller.confirm(); with options.password,
 // it asks for the current password, which goes to the action.
 class ConfirmDialog extends Dialog {
     error = '';

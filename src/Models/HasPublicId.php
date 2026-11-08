@@ -11,7 +11,7 @@ use Random\RandomException;
 
 /**
  * Gives a model a random public_id (16 characters) to use in URLs and JSON instead of the database ID. The table needs
- * the column (see sql/app.sql). Find a row with User::findByPublicId($id).
+ * the column (see sql/admin.sql). Find a row with User::findByPublicId($id).
  *
  * @package Enicore\Rivena
  */

@@ -1,4 +1,3 @@
-<?php // the Permissions page: a row a permission, a column a role (the admins have all, so they aren't listed) ?>
 <div id="page-permissions" x-data="permissionsController">
     <h4>Permissions</h4>
 

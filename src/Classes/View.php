@@ -45,9 +45,9 @@ class View
      */
     public function getLayoutHtml(string $view, array $data = [], string $layout = 'layout'): string
     {
-        $data['content'] = $this->render($view, $data);
+        $data['content'] = $this->partial($view, $data);
 
-        return $this->render($layout, $data);
+        return $this->partial($layout, $data);
     }
 
     /**
@@ -59,20 +59,6 @@ class View
     public function viewExists(string $view): bool
     {
         return $this->file($view) !== null;
-    }
-
-    /**
-     * Returns the view rendered with the data as its variables, also a partial from a view:
-     * $this->partial('admin/partials/pager').
-     *
-     * @param string $view
-     * @param array $data
-     * @return string
-     * @throws RuntimeException
-     */
-    public function partial(string $view, array $data = []): string
-    {
-        return $this->render($view, $data);
     }
 
     /**
@@ -98,14 +84,16 @@ class View
     }
 
     /**
-     * Returns the view's file rendered with the data. We're purposefully using long variable names ($viewName,
-     * $viewData, etc.) so they don't block useful variable names like $view, $data in the view template.
+     * Returns the view rendered with the data as its variables, also a partial from a view:
+     * $this->partial('admin/partials/pager'). The long parameter names ($viewName, $viewData) leave $view and $data free
+     * for the views.
      *
      * @param string $viewName
      * @param array $viewData
      * @return string
+     * @throws RuntimeException
      */
-    private function render(string $viewName, array $viewData): string
+    public function partial(string $viewName, array $viewData = []): string
     {
         $viewFileName = $this->file($viewName) ?? throw new RuntimeException("View not found: $viewName");
         extract($viewData, EXTR_SKIP);

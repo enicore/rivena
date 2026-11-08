@@ -2,6 +2,7 @@
 namespace Tests\Middleware;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use Enicore\Rivena\Classes\Request;
 use Enicore\Rivena\Classes\Session;
 use Enicore\Rivena\Middleware\CsrfMiddleware;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,7 @@ class CsrfMiddlewareTest extends TestCase
     private function process(string $method, ?string $token, ?Handler $handler = null, mixed $body = null,
                              bool $json = false): string
     {
-        $request = (new ServerRequestFactory())->createServerRequest($method, '/');
+        $request = Request::from((new ServerRequestFactory())->createServerRequest($method, '/'));
         $token === null || ($request = $request->withHeader('X-CSRF-Token', $token));
         $body === null || ($request = $request->withParsedBody($body));
         $json && ($request = $request->withHeader('Accept', 'application/json'));

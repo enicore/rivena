@@ -18,8 +18,10 @@ $app = new App(dirname(__DIR__));
 $app->get('/', [HomeController::class, 'page']);
 
 // the pages for the logged-in users (Slim runs the last added middleware first)
-$app->group(Config::get('user_path'), function (RouteCollectorProxy $group) {
-    $group->get('', [DashboardController::class, 'page'])->setName('dashboard');
-})->add(CsrfMiddleware::class)->add(AuthMiddleware::class)->add(SessionMiddleware::class);
+if (Config::get('use_admin')) {
+    $app->group(Config::get('user_path'), function (RouteCollectorProxy $group) {
+        $group->get('', [DashboardController::class, 'page'])->setName('dashboard');
+    })->add(CsrfMiddleware::class)->add(AuthMiddleware::class)->add(SessionMiddleware::class);
+}
 
 $app->run();

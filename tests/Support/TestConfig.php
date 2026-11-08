@@ -11,7 +11,7 @@ final class TestConfig
     public static function load(array $values = []): void
     {
         $file = tempnam(sys_get_temp_dir(), 'rivena_config');
-        $values += ['app_key' => 'key', 'site_name' => 'Site', 'site_url' => 'https://example.com',
+        $values += ['use_admin' => true, 'app_key' => 'key', 'site_name' => 'Site', 'site_url' => 'https://example.com',
             'db_host' => 'localhost', 'db_port' => 3306, 'db_database' => 'db', 'db_username' => 'user',
             'db_password' => 'pass'];
         file_put_contents($file, '<?php $config = ' . var_export($values, true) . ';');

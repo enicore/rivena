@@ -66,10 +66,12 @@ final class Console
     }
 
     /**
-     * Sets up a new project. First asks for the site URL (unless .env has it) and, without .env, the database, and
-     * fails without them before creating anything (an existing .env gets what it can). Then copies the project's files
-     * (never replacing one), sets up composer.json, the styles and scripts, .env and the database, and asks for the
-     * first admin. Prints only the questions and the errors.
+     * Sets up a new project, or adds what's missing to one. First asks for the site URL (unless .env has it), whether
+     * the site has a database and the admin section (a later run asks only about the ones that are off, and turns them
+     * on in src/config.php), and the database (unless .env has it); fails without the URL or the database before
+     * creating anything (an existing .env gets what it can). Then copies the project's files (never replacing one),
+     * sets up composer.json, the styles and scripts, .env and the database, and asks for the first admin. Prints only
+     * the questions and the errors.
      *
      * @return void
      * @throws Throwable
@@ -80,6 +82,7 @@ final class Console
 
         $rivena = dirname(__DIR__, 2);
         $file = "$this->root/.env";
+        $configFile = "$this->root/src/config.php";
         $exists = is_file($file);
         $env = file_get_contents($exists ? $file : "$rivena/init/env");
         $pdo = null;
@@ -98,23 +101,41 @@ final class Console
         $env = $this->setEnv($env, 'app_key', bin2hex(random_bytes(32)));
         $hasUrl = preg_match('/^site_url=\S/m', $env) === 1;
 
+        // the project's config, before init copies it; a later run asks only about what's off
+        $first = !is_file($configFile);
+        $config = $first ? [] : (static function () use ($configFile): array {
+            $config = [];
+            require $configFile;
+            return $config;
+        })();
+        $useDatabase = $config['use_database'] ?? true;
+        $useAdmin = $config['use_admin'] ?? false;
+
+        if ($hasUrl && ($first || !$useDatabase)) {
+            $useDatabase = $this->confirm('Use a database', $first);
+        }
+
         // an existing .env gets what it can, then init uses its database
+        $envHasDatabase = preg_match('/^db_host=\S/m', $env) === 1;
+
         if ($exists) {
             file_put_contents($file, $env);
 
             try {
-                $pdo = $hasUrl ? $this->connectEnv() : null;
+                $pdo = $hasUrl && $useDatabase && $envHasDatabase ? $this->connectEnv() : null;
             } catch (Throwable $e) {
                 echo "Can't use the database of .env: {$e->getMessage()}\n";
             }
         }
 
-        // a new .env's database, asked until it connects; all are required (no passwordless database accounts)
+        // the database when .env has none, asked until it connects; all are required (no passwordless database
+        // accounts)
+        $askDatabase = $hasUrl && $useDatabase && !$envHasDatabase;
         $db = ['host' => 'mysql', 'port' => '3306', 'database' => '', 'username' => '', 'password' => ''];
         $questions = ['host' => 'DB host', 'port' => 'DB port', 'database' => 'DB name', 'username' => 'DB username',
             'password' => 'DB password'];
 
-        while (!$exists && $hasUrl && !$pdo) {
+        while ($askDatabase && !$pdo) {
             foreach ($db as $key => $value) {
                 // the password is hidden and has no default, which would show it when asking again
                 $answer = $this->ask($questions[$key], $key === 'password' ? '' : $value, $key === 'password');
@@ -138,8 +159,14 @@ final class Console
             }
         }
 
-        if (!$pdo) {
+        if (!$hasUrl || ($useDatabase && !$pdo)) {
             throw new RuntimeException("\nInit needs the site URL and the database. Run init again.");
+        }
+
+        if (!$useDatabase) {
+            $useAdmin = false;
+        } elseif ($first || !$useAdmin) {
+            $useAdmin = $this->confirm('Add the admin section', $first);
         }
 
         // the project's files, and the views projects change (the others stay in Rivena and can be replaced later);
@@ -148,11 +175,22 @@ final class Console
         $this->copy("$rivena/init/public", 'public');
         $this->copy("$rivena/init/gitignore", '.gitignore');
         $this->copy("$rivena/src/views/layout.php", 'src/views/layout.php');
-        $this->copy("$rivena/src/views/admin/dashboard.php", 'src/views/admin/dashboard.php');
-        $this->copy("$rivena/src/views/admin/partials/head.php", 'src/views/admin/partials/head.php');
-        $this->copy("$rivena/src/views/admin/partials/navbar.php", 'src/views/admin/partials/navbar.php');
-        $this->copy("$rivena/src/views/admin/partials/sidebar.php", 'src/views/admin/partials/sidebar.php');
         $this->copy("$rivena/assets/dist/fonts", 'public/fonts');
+
+        if ($useAdmin) {
+            foreach (['dashboard', 'partials/head', 'partials/navbar', 'partials/sidebar'] as $view) {
+                $this->copy("$rivena/src/views/admin/$view.php", "src/views/admin/$view.php");
+            }
+        }
+
+        // the answers, in the project's config: its lines changed, or added (a config without them)
+        $text = file_get_contents($configFile);
+        foreach (['use_database' => $useDatabase, 'use_admin' => $useAdmin] as $key => $value) {
+            $line = "\$config['$key'] = " . var_export($value, true) . ';';
+            $pattern = "/^\\\$config\\['$key'\\] = \\w+;/m";
+            $text = preg_match($pattern, $text) ? preg_replace($pattern, $line, $text) : rtrim($text) . "\n\n$line\n";
+        }
+        file_put_contents($configFile, $text);
 
         // the App namespace, and the fonts copied again on composer install and update
         $composer = json_decode(file_get_contents("$this->root/composer.json"), true);
@@ -182,23 +220,25 @@ final class Console
             echo $e->getMessage() . " Build the styles and scripts later: vendor/bin/rivena build\n";
         }
 
-        if (!$exists) {
+        if ($askDatabase) {
             foreach ($db as $key => $value) {
                 $env = $this->setEnv($env, "db_$key", $value);
             }
-
-            file_put_contents($file, $env);
-            // it has the app key and the database password, so other users of the server can't read it
-            chmod($file, 0600);
         }
 
-        $this->migrate($pdo);
+        file_put_contents($file, $env);
+        // it has the app key and the database password, so other users of the server can't read it
+        chmod($file, 0600);
+
+        if ($pdo) {
+            // for migrate() and the password rules
+            Config::load($configFile, $file);
+            $this->migrate($pdo);
+        }
 
         // the first admin, if there are no users; without answers (no terminal, e.g. docker exec without -i) the
         // defaults, as a site always has an admin
-        if (!$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn()) {
-            // the password rules
-            Config::load("$this->root/src/config.php", $file);
+        if ($useAdmin && !$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn()) {
             $defaultEmail = 'admin@' . parse_url(Config::get('site_url'), PHP_URL_HOST);
             $defaultPassword = Crypt::generateRandomToken(20,
                 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789');
@@ -227,10 +267,12 @@ final class Console
     }
 
     /**
-     * Creates Rivena's tables in a new database (without users), then runs the migrations it doesn't have, in name
-     * order: Rivena's (sql/migrations/*.sql), then the app's (the project's sql/migrations/*.sql, recorded as
-     * "app/<file>"). A new database has Rivena's migrations' changes already, so they're only recorded; the app's
-     * always run (the app's first migration creates its tables). Returns the migrations that ran.
+     * With use_admin, creates the admin section's tables in a database without them (sql/admin.sql). Then runs the
+     * migrations the database doesn't have, in name order: with use_admin, Rivena's (sql/migrations/*.sql, all for the
+     * admin section's tables), then the app's (the project's sql/migrations/*.sql, recorded as "app/<file>"). Tables
+     * just created have Rivena's migrations' changes already, so those are only recorded; the app's always run (the
+     * app's first migration creates its tables). The migrations table is created when there's a migration to record.
+     * Returns the migrations that ran.
      *
      * @param PDO $pdo
      * @return array
@@ -246,25 +288,33 @@ final class Console
             return array_filter(array_map('trim', preg_split('/;\s*$/m', $text)));
         };
 
-        $new = !in_array('users', $pdo->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN), true);
+        $admin = Config::get('use_admin');
+        $new = $admin && !in_array('users', $pdo->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN), true);
 
-        // an existing database without migrations gets their table
-        foreach ($statements("$sql/app.sql") as $statement) {
-            if ($new || str_contains($statement, '`rivena_migrations`')) {
+        if ($new) {
+            foreach ($statements("$sql/admin.sql") as $statement) {
                 $pdo->exec($statement);
             }
         }
 
         // the name each is recorded with => [its file, whether it runs]
         $migrations = [];
-        foreach (glob("$sql/migrations/*.sql") as $file) {
+        foreach ($admin ? glob("$sql/migrations/*.sql") : [] as $file) {
             $migrations[basename($file)] = [$file, !$new];
         }
         foreach (glob("$this->root/sql/migrations/*.sql") as $file) {
             $migrations['app/' . basename($file)] = [$file, true];
         }
 
-        $done = $pdo->query('SELECT name FROM rivena_migrations')->fetchAll(PDO::FETCH_COLUMN);
+        if (!$migrations) {
+            return [];
+        }
+
+        // the migrations the database has
+        $pdo->exec('CREATE TABLE IF NOT EXISTS `migrations` (`name` varchar(100) CHARACTER SET ascii NOT NULL,
+            `created_at` int unsigned NOT NULL, PRIMARY KEY (`name`))
+            ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
+        $done = $pdo->query('SELECT name FROM migrations')->fetchAll(PDO::FETCH_COLUMN);
         $ran = [];
 
         foreach (array_diff_key($migrations, array_flip($done)) as $name => [$file, $run]) {
@@ -280,7 +330,7 @@ final class Console
                 $ran[] = $name;
             }
 
-            $pdo->prepare('INSERT INTO rivena_migrations (name, created_at) VALUES (?, ?)')->execute([$name, time()]);
+            $pdo->prepare('INSERT INTO migrations (name, created_at) VALUES (?, ?)')->execute([$name, time()]);
         }
 
         return $ran;
@@ -330,6 +380,29 @@ final class Console
         $pdo->exec("USE $name");
 
         return $pdo;
+    }
+
+    /**
+     * Asks the yes or no question until it's answered and returns the answer: yes for an empty one, the default if the
+     * input ran out.
+     *
+     * @param string $question
+     * @param bool $default
+     * @return bool
+     */
+    private function confirm(string $question, bool $default): bool
+    {
+        while (($answer = $this->ask("$question (y/n)", 'y')) !== null) {
+            $answer = strtolower($answer);
+
+            if (in_array($answer, ['y', 'yes', 'n', 'no'], true)) {
+                return $answer[0] === 'y';
+            }
+
+            echo "Enter y or n.\n";
+        }
+
+        return $default;
     }
 
     /**

@@ -44,7 +44,7 @@ class AppTest extends TestCase
         symlink(__DIR__ . '/Fixtures/app/src/views', "$this->root/src/views");
         file_put_contents("$this->root/.env", "app_env=dev\napp_key=key\nsite_name=Site\n" .
             "site_url=https://example.com\ndb_host=localhost\ndb_database=db\ndb_username=user\n" .
-            "db_password=pass\nrivena_t_key=secret\n");
+            "db_password=pass\nuse_admin=true\nrivena_t_key=secret\n");
         file_put_contents("$this->root/src/config.php", "<?php \$config = ['rivena_t_key' => 'file', 'db_port' => 3306];");
     }
 
@@ -257,12 +257,26 @@ class AppTest extends TestCase
     }
 
     /**
+     * Without the admin section (use_admin=false): none of Rivena's pages; the app's pages work.
+     */
+    public function testWithoutAdmin(): void
+    {
+        file_put_contents("$this->root/.env", "use_admin=false\n", FILE_APPEND);
+        $app = new App($this->root);
+        $app->get('/', fn($request, $response) => $response->sendText('home'));
+
+        $this->assertSame('', w_route('login'));
+        $this->assertSame(404, $this->request($app, 'GET', '/usr/login')->getStatusCode());
+        $this->assertSame('home', (string)$this->request($app, 'GET', '/')->getBody());
+    }
+
+    /**
      * Without a database (use_database=false): no db_* values and none of Rivena's pages; the app's pages work.
      */
     public function testWithoutDatabase(): void
     {
         file_put_contents("$this->root/.env", "app_env=dev\napp_key=key\nsite_name=Site\n" .
-            "site_url=https://example.com\nuse_database=false\n");
+            "site_url=https://example.com\nuse_database=false\nuse_admin=false\n");
         $app = new App($this->root);
         $app->get('/', fn($request, $response) => $response->sendText('home'));
 

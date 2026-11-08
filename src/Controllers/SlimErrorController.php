@@ -6,7 +6,6 @@
 namespace Enicore\Rivena\Controllers;
 
 use Enicore\Rivena\Classes\ErrorLog;
-use Enicore\Rivena\Classes\Http;
 use Enicore\Rivena\Classes\Request;
 use Enicore\Rivena\Classes\Response;
 use Enicore\Rivena\Exceptions\InputException;
@@ -63,7 +62,7 @@ class SlimErrorController extends Controller
 
         $response = new Response();
 
-        if (Http::wantsJson($request)) {
+        if ($request->wantsJson()) {
             return $response->sendError($message, $code);
         }
 

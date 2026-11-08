@@ -10,6 +10,16 @@
     --a-bounce: bounce 1s infinite;
 }
 
+// a spinning ring in the text color (.spinner, the buttons' progress)
+@mixin spinner($size: 1.5rem, $border-width: 2px) {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    border: $border-width solid;
+    border-bottom-color: transparent;
+    animation: var(--a-spin);
+}
+
 @mixin classes($bp: '') {
     @if ($bp == '') {
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -24,6 +34,12 @@
                 transform: none;
                 animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
             }
+        }
+
+        // e.g. while a part of the page loads: <div class="spinner m-auto"></div>
+        .spinner {
+            display: block;
+            @include spinner;
         }
     }
 

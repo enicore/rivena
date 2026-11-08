@@ -39,6 +39,16 @@ class Request extends SlimRequest
     }
 
     /**
+     * Returns true if the request asks for JSON ("Accept: application/json"), like RivenaSpa's page loads.
+     *
+     * @return bool
+     */
+    public function wantsJson(): bool
+    {
+        return stripos($this->getHeaderLine('Accept'), 'application/json') !== false;
+    }
+
+    /**
      * Returns the path of the named route, with the app's base path, e.g. urlFor('user', ['id' => 5]).
      *
      * @param string $routeName

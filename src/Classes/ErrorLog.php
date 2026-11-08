@@ -10,10 +10,10 @@ use Throwable;
 
 /**
  * The site's errors and warnings, for the Error Log page: PHP's warnings, notices and deprecations, the exceptions and
- * the fatal errors go to the error_log table (a message seen again counts there, kept DAYS days after it's last seen).
- * The errors are also emailed to error_notification_email (config), at most one email an hour, so nobody has to watch
- * the page. new App() registers it for PHP's warnings and fatal errors; SlimErrorController and new App() add the
- * exceptions. PHP logs them as before.
+ * the fatal errors go to the error_log table with use_admin (a message seen again counts there, kept DAYS days after
+ * it's last seen). The errors are also emailed to error_notification_email (config), at most one email an hour, so
+ * nobody has to watch the page. new App() registers it for PHP's warnings and fatal errors; SlimErrorController and
+ * new App() add the exceptions. PHP logs them as before.
  *
  * @package Enicore\Rivena
  */
@@ -70,7 +70,8 @@ final class ErrorLog
         $message = mb_strcut(mb_scrub($message), 0, 65535);
 
         try {
-            if (Config::get('use_database')) {
+            // the table is the admin's Error Log page's
+            if (Config::get('use_admin')) {
                 DB::table('error_log')->where('last_at', '<', time() - self::DAYS * 86400)->delete();
                 DB::table('error_log')->upsert(['hash' => sha1("$level $message"), 'level' => $level,
                     'message' => $message, 'path' => $path, 'count' => 1, 'first_at' => time(), 'last_at' => time()],

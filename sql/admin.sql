@@ -1,12 +1,5 @@
--- Rivena's tables, for a new database (rivena init and rivena migrate); the existing ones get the changes from
--- sql/migrations.
-
--- the migrations of sql/migrations that the database has (Console)
-CREATE TABLE IF NOT EXISTS `rivena_migrations` (
-  `name` varchar(100) CHARACTER SET ascii NOT NULL,
-  `created_at` int unsigned NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- The admin section's tables (use_admin), for a new database (rivena init and rivena migrate); the existing ones get
+-- the changes from sql/migrations.
 
 -- the users (Enicore\Rivena\Models\User); Auth checks the passwords (password_hash()) and the sessions (a session
 -- ends when its session_version isn't the user's, e.g. after a password change)

@@ -4,7 +4,7 @@
  */
 
 // The admin layout (<body class="admin">): the navbar on top, the sidebar and the page below it; only the page's
-// content scrolls. The notifications are at the bottom right.
+// content scrolls.
 
 @use "../scss/functions" as f;
 
@@ -204,17 +204,6 @@
             position: absolute;
             inset: 0;
             overflow-y: auto;
-        }
-
-        #notifications {
-            position: fixed;
-            right: 1rem;
-            bottom: 1rem;
-
-            div {
-                width: 350px;
-                margin-top: 1rem;
-            }
         }
 
         // the System Info page: the names' column is as wide in all the cards

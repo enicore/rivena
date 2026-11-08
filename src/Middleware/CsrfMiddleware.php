@@ -5,7 +5,6 @@
  */
 namespace Enicore\Rivena\Middleware;
 
-use Enicore\Rivena\Classes\Http;
 use Enicore\Rivena\Classes\Session;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -40,7 +39,7 @@ final class CsrfMiddleware implements MiddlewareInterface
             $response = new \Enicore\Rivena\Classes\Response();
 
             // with the session's token: after a remember-me login into a new session, postJson() retries with it
-            if (Http::wantsJson($request)) {
+            if ($request->wantsJson()) {
                 return $response->sendError('Invalid CSRF token. Please reload the page.', 403,
                     ['csrf' => Session::getCsrfToken()]);
             }

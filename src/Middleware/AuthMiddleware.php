@@ -6,7 +6,6 @@
 namespace Enicore\Rivena\Middleware;
 
 use Enicore\Rivena\Classes\Auth;
-use Enicore\Rivena\Classes\Http;
 use Enicore\Rivena\Classes\Response as RivenaResponse;
 use Enicore\Rivena\Models\User;
 use Enicore\Rivena\TwoFactor\TwoFactor;
@@ -52,7 +51,7 @@ final class AuthMiddleware implements MiddlewareInterface
             if (!in_array($name, ['account', 'account.save'], true) && !str_starts_with($name, 'account.two-factor.')) {
                 $url = $routeContext->getRouteParser()->urlFor('account', [], ['tab' => 'two-factor']);
 
-                return Http::wantsJson($request) ?
+                return $request->wantsJson() ?
                     (new RivenaResponse())->sendError('Set up two-factor authentication first.', 403,
                         ['redirect' => $url]) :
                     (new RivenaResponse())->sendRedirect($url);
@@ -65,7 +64,7 @@ final class AuthMiddleware implements MiddlewareInterface
 
         $url = $routeContext->getRouteParser()->urlFor('login');
 
-        if (Http::wantsJson($request)) {
+        if ($request->wantsJson()) {
             return (new RivenaResponse())->sendError('Please log in.', 401, ['redirect' => $url]);
         }
 

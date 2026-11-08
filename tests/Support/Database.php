@@ -4,7 +4,7 @@ namespace Tests\Support;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * An in-memory SQLite database for Eloquent, with the tables of sql/app.sql that Rivena's classes use.
+ * An in-memory SQLite database for Eloquent, with the tables of sql/admin.sql that Rivena's classes use.
  */
 final class Database
 {

@@ -146,11 +146,11 @@ class ErrorLogTest extends TestCase
     }
 
     /**
-     * Without a database (use_database=false), the error is only logged by PHP and emailed.
+     * Without the admin section (use_admin=false), the error is only logged by PHP and emailed.
      */
-    public function testDatabaseOff(): void
+    public function testAdminOff(): void
     {
-        $smtp = new SmtpServer(['error_notification_email' => 'admin@example.com', 'use_database' => false]);
+        $smtp = new SmtpServer(['error_notification_email' => 'admin@example.com', 'use_admin' => false]);
         $this->startLog();
 
         ErrorLog::add('error', 'Boom');

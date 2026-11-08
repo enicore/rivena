@@ -1,4 +1,3 @@
-<?php // the System Info page: cards of names and values, and the mail with a test email ?>
 <div id="page-system" x-data="systemController">
     <h4>System Info</h4>
 

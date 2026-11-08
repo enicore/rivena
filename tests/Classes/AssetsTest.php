@@ -46,7 +46,7 @@ class AssetsTest extends TestCase
         $this->assertSame('body a{color:#123456}', trim(file_get_contents("$this->root/public/css/app.css")));
         $this->assertFileDoesNotExist("$this->root/public/css/_colors.css");
 
-        // rivena.js, RivenaSpa, Rivena's admin base classes and controllers, the project's app.js, the others in
+        // rivena.js, RivenaSpa, Rivena's base classes (common) and controllers, the project's app.js, the others in
         // alphabetical order, Alpine
         $js = file_get_contents("$this->root/public/js/app.js");
         $positions = array_map(fn($text) => strpos($js, $text),

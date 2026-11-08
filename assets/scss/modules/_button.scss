@@ -4,6 +4,7 @@
  */
 @use "../scss/variables" as v;
 @use "../scss/functions" as f;
+@use "animation";
 @use "transition";
 
 @mixin variables {
@@ -182,14 +183,8 @@
             display: block;
             padding: 0;
             content: "";
-            width: 0.7em;
-            height: 0.7em;
-            border-radius: 50%;
-            border-style: solid;
-            border-width: 1px;
-            border-bottom-color: transparent;
+            @include animation.spinner(.7em, 1px);
             transform: none;
-            animation: var(--a-spin);
             color: var(--button-text-color);
         }
 

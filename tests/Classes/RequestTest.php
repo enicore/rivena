@@ -177,4 +177,15 @@ class RequestTest extends TestCase
             $this->assertSame('name', $e->getKey());
         }
     }
+
+    public function testWantsJson(): void
+    {
+        $request = fn(string $accept) => Request::from((new ServerRequestFactory())->createServerRequest('GET', '/')
+            ->withHeader('Accept', $accept));
+
+        $this->assertTrue($request('application/json')->wantsJson());
+        $this->assertTrue($request('text/html, Application/JSON;q=0.9')->wantsJson());
+        $this->assertFalse($request('text/html,*/*')->wantsJson());
+        $this->assertFalse($request('')->wantsJson());
+    }
 }

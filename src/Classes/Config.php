@@ -23,7 +23,7 @@ class Config
 
     /**
      * Loads the config file (which sets $config['key']), then the .env file over it, and checks that the required
-     * values are set, and the password limits in their ranges.
+     * values are set, the admin has a database, and the password limits are in their ranges.
      *
      * @param string $file
      * @param string $envFile
@@ -38,7 +38,7 @@ class Config
             require $file;
             return $config;
         })() : [];
-        self::$config = $config + ['use_database' => true, 'user_path' => '/usr',
+        self::$config = $config + ['use_database' => true, 'use_admin' => false, 'user_path' => '/usr',
                 'event_log_retention_months' => 6, 'two_factor_methods' => ['totp', 'webauthn'],
                 'two_factor_required' => false, 'two_factor_email_notifications' => true, 'password_min_length' => 12,
                 'password_min_score' => 3, 'password_max_length' => 60, 'image_max_megapixels' => 25,
@@ -73,6 +73,10 @@ class Config
 
         if ($missing) {
             throw new RuntimeException('Missing config values: ' . implode(', ', $missing));
+        }
+
+        if (self::$config['use_admin'] && !self::$config['use_database']) {
+            throw new RuntimeException('Config value use_admin needs use_database');
         }
 
         // the links in emails and WebAuthn's keys are for this address

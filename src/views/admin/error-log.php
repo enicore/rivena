@@ -1,4 +1,3 @@
-<?php // the Error Log page: the site's errors and warnings (ErrorLog), the last seen first ?>
 <div id="page-error-log" x-data="errorLogController">
     <div class="flex justify-between items-center gap mb">
         <h4 class="mb-0">Error Log</h4>

@@ -1,8 +1,7 @@
-<?php // the Roles page: the roles (the built-in User and Admin aren't listed), add and rename in a dialog, delete ?>
-<div id="page-roles" x-data="rolesController" @keydown.escape.window="closeDialog()">
+<div id="page-roles" x-data="rolesController">
     <div class="flex justify-between items-center gap pr-sm mb">
         <h4 class="mb-0">Roles</h4>
-        <button class="small primary" @click="openDialog()">Add role</button>
+        <button class="small primary" @click="edit()">Add role</button>
     </div>
 
     <table class="striped" x-show="data.roles.length">
@@ -21,7 +20,7 @@
                     <td>
                         <div class="flex justify-end gap-sm">
                             <button class="x-small icon-pencil" title="Rename" aria-label="Rename"
-                                    @click="openDialog(role)"></button>
+                                    @click="edit(role)"></button>
                             <button class="x-small danger icon-trash" title="Delete" aria-label="Delete"
                                     @click="remove(role)"></button>
                         </div>
@@ -32,10 +31,9 @@
     </table>
     <p class="opacity-60" x-show="!data.roles.length">No roles yet.</p>
 
-    <div class="modal-mask" :class="{visible: dialog, message: error}" @click.self="closeDialog()"
-         x-effect="document.body.classList.toggle('modal-visible', dialog)">
-        <form class="dialog" role="dialog" aria-modal="true" aria-labelledby="role-dialog-title" x-show="dialog"
-              @submit.prevent="save()" @keydown.tab="trapFocus($event)">
+    <div class="modal-mask" :class="{visible: dialog === 'role', message: error}" @click.self="closeDialog()">
+        <form class="dialog" x-ref="role" role="dialog" aria-modal="true" aria-labelledby="role-dialog-title"
+              x-show="dialog === 'role'" @submit.prevent="save()">
             <div class="dialog-title" id="role-dialog-title" x-text="id ? 'Rename role' : 'Add role'"></div>
             <div class="dialog-message alert danger" x-text="error"></div>
             <div class="dialog-contents">
