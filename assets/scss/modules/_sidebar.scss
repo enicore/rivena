@@ -29,12 +29,24 @@
             display: block;
         }
 
-        ul li ul {
+        // as specific as the navbar's dropdown menus (_navbar.scss), which come first
+        ul li :is(a, button).dropdown ~ ul {
             position: fixed;
             inset: auto auto auto 3em;
             min-width: 14rem;
             margin-top: -3em;
         }
+    }
+}
+
+// a section's menu inside the sidebar, below its link
+@mixin expanded-menus {
+    #sidebar ul li :is(a, button).dropdown ~ ul {
+        position: static;
+        border: none;
+        min-width: 0;
+        margin: 0;
+        padding: 0 0 0 2em;
     }
 }
 
@@ -66,15 +78,10 @@
         }
     }
 
-    html:not(.sidebar-collapsed) {
-        #sidebar ul li ul {
-            position: static;
-            border: none;
-            min-width: 0;
-            margin: 0;
-            padding: 0 0 0 2em;
-        }
-    }
+    // the menus inside the sidebar where it shows its texts: on xs screens (the mobile menu), and on larger ones than sm
+    // unless it's collapsed; elsewhere they pop out next to the icons (narrow-sidebar)
+    @include size.size(xs) { @include expanded-menus; }
+    html:not(.sidebar-collapsed) { @include size.size(md-up) { @include expanded-menus; } }
 
     @include size.size(sm) { @include narrow-sidebar; }
     html.sidebar-collapsed { @include size.size(sm-up) { @include narrow-sidebar; } }

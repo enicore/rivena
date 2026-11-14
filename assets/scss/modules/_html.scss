@@ -15,6 +15,9 @@
     --bg-info:    #{f.color(v.$info-color,    850)};
     --bg: var(--bg-default);
     --line-height: 1.5;
+    // auto for both gives the browser's own scrollbars
+    --scrollbar-width: thin;
+    --scrollbar-color: var(--rgba-20) transparent;
 }
 
 @mixin light-variables {
@@ -36,6 +39,8 @@
 
     * {
         box-sizing: border-box;
+        scrollbar-width: var(--scrollbar-width);
+        scrollbar-color: var(--scrollbar-color);
     }
 
     html,

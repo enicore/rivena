@@ -16,6 +16,9 @@ class Rivena {
 
         document.addEventListener('DOMContentLoaded', () => {
             this.setupDocumentEvents();
+            // a section the page opened would pop out over the page next to the icons-only sidebar
+            this.hideNarrowSidebarMenus();
+            window.addEventListener('resize', () => this.hideNarrowSidebarMenus());
         });
     }
 
@@ -98,9 +101,20 @@ class Rivena {
             this.toggleMobileMenu();
         }
 
-        document.querySelectorAll('#navbar .menu-visible, .sidebar-collapsed .menu-visible').forEach(element => {
+        document.querySelectorAll('#navbar .menu-visible').forEach(element => {
             this.setMenuVisible(element, false);
         });
+        this.hideNarrowSidebarMenus();
+    }
+
+    // hides the sidebar's menus while it shows only its icons (collapsed, or on sm screens): they pop out over the page
+    hideNarrowSidebarMenus() {
+        // the links' texts are hidden then (shown only on hover)
+        const text = document.querySelector('#sidebar a:not(:hover) > .text');
+
+        if (text && getComputedStyle(text).display === 'none') {
+            document.querySelectorAll('#sidebar .menu-visible').forEach(element => this.setMenuVisible(element, false));
+        }
     }
 
     // returns the theme shown: "dark" or "light"

@@ -7,9 +7,8 @@ admin area built in. Needs PHP 8.4 and, for development, `sass` on the web serve
 
 ```shell
 composer require enicore/rivena
-vendor/bin/rivena init      # files, composer.json, site address, database, admin section, first admin, .env
-vendor/bin/rivena migrate   # the admin section's new migrations, then the app's (sql/migrations in both)
-vendor/bin/rivena build     # builds the styles and scripts (dev does it on each request)
+vendor/bin/rivena init      # files, composer.json, site address, database and tables, admin section, first admin,
+                            # styles and scripts, .env
 ```
 
 Point the web server at `public/` and open `/usr`. Init asks for the site URL, whether to use a database and the admin
@@ -27,6 +26,9 @@ src/views/            the views; one named like Rivena's replaces it (layout.php
 src/styles/app.scss   the styles -> public/css/app.css
 src/scripts/          the scripts -> public/js/app.js (with Rivena's scripts and Alpine)
 ```
+
+Later: `vendor/bin/rivena migrate` runs the new migrations (the admin section's, then the app's, `sql/migrations` in
+both), `vendor/bin/rivena build` builds the styles and scripts (dev does it on each request).
 
 With `app_env=dev`: styles and scripts are rebuilt on the next request after a change (errors in the Error Log), pages
 reload when `src/` or `public/` changes, error pages show the details, no error emails. The built files are committed.
@@ -206,7 +208,8 @@ are comma-separated). Read with `Config::get('key', $default)`.
 ```
 
 `$icons` become `icon-<name>` classes; `$font-path: false` uses the system font. Hide by size with `hide-xs`,
-`hide-sm-down`... The color classes are in `rivena_colors.css`. The frontend is also on npm (`@enicore/rivena`).
+`hide-sm-down`... `--scrollbar-width: auto; --scrollbar-color: auto` gives the browser's scrollbars back. The
+color classes are in `rivena_colors.css`. The frontend is also on npm (`@enicore/rivena`).
 
 ## License
 

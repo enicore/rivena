@@ -1,14 +1,16 @@
-1.0.5 (unreleased)
+1.0.5 (2026-11-14)
 ==================
-- added use_admin config value: sites without the admin section, its tables and the error log; init asks for it
-- init asks whether to use a database, and turns the database or the admin section on when run again
-- renamed the rivena_migrations table to migrations, created with the first migration; sql/app.sql is sql/admin.sql
-- added rivena.getCookie(), getTheme() and setTheme(); setCookie() saves objects and arrays as JSON, with secure
-- added the .spinner class (a block spinning ring); the progress buttons use the same
-- moved the dialogs' partials to partials/, for any layout; showNotification() adds #notifications itself
-- added Controller.openDialog() and closeDialog() for a page's own dialog (Escape, focus, modal-visible)
-- renamed assets/js/admin to assets/js/common
-- removed the Http class: Http::wantsJson($request) is $request->wantsJson()
+- added use_admin config value: sites without the admin section; init asks for it and for the database
+- renamed the rivena_migrations table to migrations and sql/app.sql to sql/admin.sql
+- added rivena.getCookie(), getTheme() and setTheme(); setCookie() saves objects and arrays
+- added the .spinner class
+- added Controller.openDialog() and closeDialog() for a page's own dialog
+- moved the dialogs' partials to partials/ and assets/js/admin to assets/js/common
+- removed the Http class (use $request->wantsJson())
+- changed the font to Open Sans
+- thin scrollbars everywhere
+- fixed the border color and style classes next to a width class
+- fixed the sidebar's section menus on small screens
 
 1.0.4 (2026-10-31)
 ==================

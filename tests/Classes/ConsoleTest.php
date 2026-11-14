@@ -171,7 +171,7 @@ class ConsoleTest extends TestCase
         foreach ($views as $view) {
             $this->assertFileEquals(dirname(__DIR__, 2) . "/src/views/$view.php", "$this->root/src/views/$view.php");
         }
-        $this->assertFileExists("$this->root/public/fonts/ubuntu-sans-latin.woff2");
+        $this->assertFileExists("$this->root/public/fonts/open-sans-latin.woff2");
         $this->assertSame([
             'require' => ['enicore/rivena' => '^1.0'],
             'scripts' => ['post-install-cmd' => ['other', 'rivena publish'], 'post-update-cmd' => ['rivena publish']],
@@ -361,17 +361,17 @@ class ConsoleTest extends TestCase
         exec(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($code), $output, $code);
 
         $this->assertSame(0, $code);
-        $this->assertFileExists("$this->root/public/fonts/ubuntu-sans-latin.woff2");
+        $this->assertFileExists("$this->root/public/fonts/open-sans-latin.woff2");
     }
 
     public function testPublish(): void
     {
         mkdir("$this->root/public/fonts", 0777, true);
-        file_put_contents("$this->root/public/fonts/ubuntu-sans-latin.woff2", 'old');
+        file_put_contents("$this->root/public/fonts/open-sans-latin.woff2", 'old');
 
         $this->assertSame([0, '', ''], $this->rivena('publish'));
-        $this->assertFileEquals(__DIR__ . '/../../assets/dist/fonts/ubuntu-sans-latin.woff2',
-            "$this->root/public/fonts/ubuntu-sans-latin.woff2");
+        $this->assertFileEquals(__DIR__ . '/../../assets/dist/fonts/open-sans-latin.woff2',
+            "$this->root/public/fonts/open-sans-latin.woff2");
     }
 
     public function testUsage(): void

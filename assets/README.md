@@ -5,7 +5,7 @@ The frontend of Enicore Rivena, a PHP framework for admin-focused websites (Comp
 - `dist/rivena.css`, `dist/rivena_colors.css`: the styles and the color classes
 - `dist/rivena.min.js`: the scripts; `dist/rivena_spa.min.js`: page loading without reloads
 - `dist/alpine.min.js`: Alpine.js 3
-- `dist/fonts`: Ubuntu Sans
+- `dist/fonts`: Open Sans
 - `scss/`, `js/`: the sources
 
 ```scss

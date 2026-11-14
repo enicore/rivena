@@ -1,7 +1,7 @@
 #!/bin/bash
 # Builds assets/dist/ from assets/ (rivena.css, rivena_colors.css, rivena.min.js, rivena_spa.min.js) and downloads
-# the latest Alpine.js 3.x, the latest Ubuntu Sans font (its Latin and Latin Extended web font subsets, variable,
-# regular and italic) and GeoIp's database (ip-location-db's user-country, PDDL, updated daily).
+# the latest Alpine.js 3.x, the latest Open Sans font (Fontsource's 5.x: its Latin and Latin Extended subsets,
+# variable, regular and italic) and GeoIp's database (ip-location-db's user-country, PDDL, updated daily).
 # Needs sass (Dart Sass), minify (tdewolff) and curl. For Rivena's development only; the projects don't build Rivena.
 set -eu
 cd -- "$(dirname -- "$0")/.."
@@ -15,12 +15,12 @@ curl -fsSL "https://github.com/sapics/ip-location-db/releases/download/latest/us
     -o src/resources/geoip/user-country.mmdb
 
 
-FONTS="https://raw.githubusercontent.com/canonical/Ubuntu-Sans-fonts/main"
+FONTS="https://cdn.jsdelivr.net/npm/@fontsource-variable/open-sans@5"
 mkdir -p assets/dist/fonts
-for style in "" -Italic; do
-    for subset in latin latin-extended; do
-        name="ubuntu-sans${style,,}-$subset.woff2"
-        curl -fsSL "$FONTS/fonts/webfont-subsets/UbuntuSans$style%5Bwdth,wght%5D-$subset.woff2" \
-            -o "assets/dist/fonts/$name"
+curl -fsSL "$FONTS/LICENSE" -o assets/dist/fonts/LICENSE.txt
+for style in normal italic; do
+    for subset in latin latin-ext; do
+        name="open-sans$([ $style = italic ] && echo -italic)-$subset.woff2"
+        curl -fsSL "$FONTS/files/open-sans-$subset-wght-$style.woff2" -o "assets/dist/fonts/$name"
     done
 done

@@ -6,28 +6,26 @@
 @use '../scss/functions' as f;
 @use "../scss/variables" as v;
 
-// the URL of Ubuntu Sans's files (assets/dist/fonts, which `rivena publish` copies to public/fonts); false leaves the
+// the URL of Open Sans's files (assets/dist/fonts, which `rivena publish` copies to public/fonts); false leaves the
 // font out and uses the system's font
 $font-path: "/fonts" !default;
 
-$latin-range: U+0020-007E, U+00A0-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2009, U+2013-2015, U+2018-201A,
-    U+201C-201E, U+2020-2022, U+2026, U+2030, U+2032-2033, U+2039-203A, U+2044, U+2074, U+20AC, U+2212, U+2215;
-$latin-extended-range: U+0100-024F, U+1E2C-1E2D, U+1E6C-1E6D, U+1E80-1E85, U+1E9E, U+1ECA-1ECB, U+1EF2-1EF3, U+20AE,
-    U+20B4, U+20B8-20B9, U+20BD;
+$latin-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+$latin-ext-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 
-// variable fonts (all the weights and widths in one file); the browser loads a subset only when the page has its
-// characters
+// variable fonts (all the weights in one file); the browser loads a subset only when the page has its characters
 @mixin font-face {
     @if $font-path {
         @each $style, $suffix in (normal: "", italic: "-italic") {
-            @each $subset, $range in (latin: $latin-range, latin-extended: $latin-extended-range) {
+            @each $subset, $range in (latin: $latin-range, latin-ext: $latin-ext-range) {
                 @font-face {
-                    font-family: "Ubuntu Sans";
+                    font-family: "Open Sans";
                     font-style: $style;
-                    font-weight: 100 800;
-                    font-stretch: 75% 100%;
+                    font-weight: 300 800;
                     font-display: swap;
-                    src: url("#{$font-path}/ubuntu-sans#{$suffix}-#{$subset}.woff2") format("woff2");
+                    src: url("#{$font-path}/open-sans#{$suffix}-#{$subset}.woff2") format("woff2");
                     unicode-range: $range;
                 }
             }
@@ -38,7 +36,7 @@ $latin-extended-range: U+0100-024F, U+1E2C-1E2D, U+1E6C-1E6D, U+1E80-1E85, U+1E9
 @mixin variables {
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     @if $font-path {
-        --font-sans-serif: "Ubuntu Sans", ui-sans-serif, system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+        --font-sans-serif: "Open Sans", ui-sans-serif, system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
     } @else {
         --font-sans-serif: ui-sans-serif, system-ui, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
     }

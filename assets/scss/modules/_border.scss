@@ -39,6 +39,20 @@
 }
 
 @mixin classes($bp: '') {
+    .#{$bp}b-0 { border: 0; }
+    .#{$bp}bt-0 { border-top: 0; }
+    .#{$bp}br-0 { border-right: 0; }
+    .#{$bp}bb-0 { border-bottom: 0; }
+    .#{$bp}bl-0 { border-left: 0; }
+
+    @each $size in v.$xs-xl {
+        @each $s, $side in v.$sides {
+            $default: if(sass($size == "xs"): ".#{$bp}b#{$s},"; else: "");
+            #{$default}.#{$bp}b#{$s}-#{$size} { border#{$side}: var(--b-#{$size}) }
+        }
+    }
+
+    // after the widths, whose border shorthand would reset them
     @if $bp == '' {
         .b-color, .b-default { border-color: var(--b-default) }
         .b-primary { border-color: var(--b-primary) }
@@ -51,19 +65,6 @@
         .b-dashed { border-style: dashed; }
         .b-dotted { border-style: dotted; }
         .b-double { border-style: double; }
-    }
-
-    .#{$bp}b-0 { border: 0; }
-    .#{$bp}bt-0 { border-top: 0; }
-    .#{$bp}br-0 { border-right: 0; }
-    .#{$bp}bb-0 { border-bottom: 0; }
-    .#{$bp}bl-0 { border-left: 0; }
-
-    @each $size in v.$xs-xl {
-        @each $s, $side in v.$sides {
-            $default: if(sass($size == "xs"): ".#{$bp}b#{$s},"; else: "");
-            #{$default}.#{$bp}b#{$s}-#{$size} { border#{$side}: var(--b-#{$size}) }
-        }
     }
 
     .#{$bp}r-0 { border-radius: 0; }
